@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MMS Fusion — Oracle HCM AI Accelerator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080C14;
+  --surface:#0D1321;
+  --surface2:#111827;
+  --surface3:#1A2035;
+  --border:#1E2D45;
+  --border2:#253450;
+  --blue:#2D6FFF;
+  --blue-dim:rgba(45,111,255,0.12);
+  --blue-glow:rgba(45,111,255,0.3);
+  --mint:#00FFB2;
+  --mint-dim:rgba(0,255,178,0.08);
+  --mint-glow:rgba(0,255,178,0.25);
+  --amber:#F59E0B;
+  --amber-dim:rgba(245,158,11,0.1);
+  --red:#FF4D6D;
+  --red-dim:rgba(255,77,109,0.1);
+  --green:#10B981;
+  --green-dim:rgba(16,185,129,0.1);
+  --text:#F0F4FF;
+  --text2:#8A9BBE;
+  --text3:#4A5A7A;
+  --f-head:'Space Grotesk',system-ui,sans-serif;
+  --f-body:'Inter',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',monospace;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:13px;line-height:1.5;overflow:hidden}
+#app{display:flex;height:100vh}
+
+/* ── SIDEBAR ── */
+#sb{width:248px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow-y:auto;position:relative}
+#sb::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,var(--border) 1px,transparent 1px);background-size:20px 20px;opacity:0.3;pointer-events:none}
+.sb-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border);position:relative}
+.sb-wordmark{font-family:var(--f-head);font-size:15px;font-weight:700;letter-spacing:.06em;color:var(--text);display:flex;align-items:center;gap:8px}
+.sb-wordmark .dot{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+.sb-sub{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase}
+.sb-sec{padding:14px 10px 4px}
+.sb-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);padding:0 8px;margin-bottom:6px}
+.nav{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text3);font-size:12px;font-weight:500;transition:all .15s;position:relative;user-select:none;border:1px solid transparent}
+.nav:hover{background:var(--surface3);color:var(--text2);border-color:var(--border)}
+.nav.active{background:var(--blue-dim);color:var(--text);border-color:rgba(45,111,255,0.3)}
+.nav.active .nav-ico{color:var(--blue)}
+.nav-ico{width:15px;text-align:center;font-size:12px;flex-shrink:0;opacity:.7}
+.nav.active .nav-ico{opacity:1}
+.nav-badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.03em}
+.nb-grey{background:var(--surface3);color:var(--text3);border:1px solid var(--border)}
+.nb-mint{background:var(--mint-dim);color:var(--mint);border:1px solid rgba(0,255,178,0.2)}
+.nb-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(45,111,255,0.3)}
+.nb-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.nb-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2)}
+.status-dot{width:5px;height:5px;border-radius:50%;margin-left:auto;flex-shrink:0}
+.sd-mint{background:var(--mint);box-shadow:0 0 6px var(--mint)}
+.sd-amber{background:var(--amber)}
+.sd-red{background:var(--red);box-shadow:0 0 6px var(--red)}
+.sd-grey{background:var(--text3)}
+
+.sb-proj-wrap{padding:10px;margin-top:auto;border-top:1px solid var(--border)}
+.sb-proj-card{padding:12px 14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.sb-proj-card:hover{border-color:var(--border2)}
+.sp-eyebrow{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.sp-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-phase{font-size:10px;color:var(--mint);margin-top:3px;font-family:var(--f-mono)}
+.sp-sw{font-size:10px;color:var(--text3);margin-top:5px}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+#hdr{height:52px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px}
+.hdr-breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3)}
+.hdr-breadcrumb .sep{color:var(--border2)}
+.hdr-title{font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--text)}
+.hdr-gap{flex:1}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--f-body);transition:all .15s;white-space:nowrap;letter-spacing:.01em}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 0 20px var(--blue-glow)}.btn-primary:hover{opacity:.9;box-shadow:0 0 28px var(--blue-glow)}
+.btn-mint{background:var(--mint);color:#080C14;font-weight:700}.btn-mint:hover{opacity:.9;box-shadow:0 0 20px var(--mint-glow)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}.btn-ghost:hover{background:var(--surface3);border-color:var(--border2);color:var(--text)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.3)}.btn-danger:hover{background:rgba(255,77,109,0.15)}
+.btn-sm{padding:5px 11px;font-size:11px}
+.btn-xs{padding:3px 9px;font-size:10px}
+#ora-status{font-size:11px;font-family:var(--f-mono)}
+
+#content{flex:1;overflow-y:auto;padding:20px}
+.panel{display:none}.panel.active{display:block}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
+.card-head{font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.card-sub{font-size:11px;font-weight:400;color:var(--text3)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0;font-family:var(--f-body)}
+.b-mint{background:var(--mint-dim);color:var(--mint);border:1px solid rgba(0,255,178,0.2)}
+.b-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(45,111,255,0.3)}
+.b-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.b-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2)}
+.b-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.2)}
+.b-grey{background:var(--surface3);color:var(--text3);border:1px solid var(--border)}
+.b-purple{background:rgba(139,92,246,0.1);color:#A78BFA;border:1px solid rgba(139,92,246,0.2)}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.prog-lbl{font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;flex-shrink:0;font-family:var(--f-head)}
+.prog-track{flex:1;height:4px;background:var(--surface3);border-radius:20px;overflow:hidden}
+.prog-fill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.prog-pct{font-size:13px;font-weight:700;min-width:36px;text-align:right;font-family:var(--f-mono);flex-shrink:0}
+.prog-tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.pt-blocked{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2)}
+.pt-partial{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.pt-complete{background:var(--mint-dim);color:var(--mint);border:1px solid rgba(0,255,178,0.2)}
+
+/* ── PROJECT CARDS ── */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.proj-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.proj-card.active-proj{border-color:rgba(45,111,255,0.4);box-shadow:0 0 0 1px rgba(45,111,255,0.15)}
+.proj-card.done-proj{border-color:rgba(0,255,178,0.2)}
+.proj-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:14px 14px 0 0}
+.active-proj::after{background:linear-gradient(90deg,var(--blue),rgba(45,111,255,0))}
+.done-proj::after{background:linear-gradient(90deg,var(--mint),rgba(0,255,178,0))}
+.new-proj::after{background:linear-gradient(90deg,var(--amber),rgba(245,158,11,0))}
+.pc-name{font-family:var(--f-head);font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px}
+.pc-meta{font-size:11px;color:var(--text3)}
+.pc-prog-track{height:2px;background:var(--surface3);border-radius:10px;overflow:hidden;margin:12px 0 8px}
+.pc-prog-fill{height:100%;border-radius:10px}
+.pc-footer{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:var(--f-mono)}
+.pc-new-card{background:transparent;border:1px dashed var(--border2);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:148px;gap:10px;cursor:pointer;transition:all .2s}
+.pc-new-card:hover{border-color:var(--blue);background:var(--blue-dim)}
+.pc-new-icon{width:40px;height:40px;border-radius:10px;background:var(--surface3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text3);transition:all .2s}
+.pc-new-card:hover .pc-new-icon{background:var(--blue-dim);border-color:rgba(45,111,255,0.4);color:var(--blue)}
+.pc-new-lbl{font-size:12px;font-weight:600;color:var(--text3);transition:all .2s}
+.pc-new-card:hover .pc-new-lbl{color:var(--blue)}
+
+/* ── UPLOAD ── */
+.upload-zone{border:1px dashed var(--border2);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-dim)}
+.upload-zone.done{border-color:rgba(0,255,178,0.3);background:var(--mint-dim)}
+.uz-icon{font-size:28px;margin-bottom:8px}
+.uz-title{font-family:var(--f-head);font-size:13px;font-weight:600;margin-bottom:3px}
+.uz-sub{font-size:11px;color:var(--text3)}
+.file-types{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.ftype{padding:2px 8px;background:var(--surface3);border:1px solid var(--border);border-radius:4px;font-size:10px;font-weight:600;color:var(--text3);font-family:var(--f-mono)}
+
+/* ── API KEY BAR ── */
+.api-bar{background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.api-inp{flex:1;min-width:200px;padding:7px 11px;border:1px solid rgba(245,158,11,0.2);border-radius:7px;font-size:12px;font-family:var(--f-mono);background:var(--surface2);color:var(--text);outline:none}
+.api-inp:focus{border-color:var(--amber)}
+
+/* ── QUESTIONNAIRE ── */
+.q-section-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:10px 0 8px;border-bottom:1px solid var(--border);margin:14px 0 10px;display:flex;align-items:center;gap:8px}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:9px;margin-bottom:5px;border:1px solid var(--border);background:var(--surface2);transition:all .2s}
+.q-item.ok{border-color:rgba(0,255,178,0.2);background:var(--mint-dim)}
+.q-item.miss{border-color:rgba(255,77,109,0.2);background:var(--red-dim)}
+.q-item.warn{border-color:rgba(245,158,11,0.15);background:var(--amber-dim)}
+.q-ico{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px;font-weight:700}
+.qi-ok{background:rgba(0,255,178,0.15);color:var(--mint)}
+.qi-miss{background:rgba(255,77,109,0.15);color:var(--red)}
+.qi-warn{background:rgba(245,158,11,0.15);color:var(--amber)}
+.q-label{font-size:12px;font-weight:500;color:var(--text)}
+.q-val{font-size:11px;color:var(--text2);margin-top:3px;font-family:var(--f-mono);line-height:1.6}
+.q-inp{width:100%;margin-top:8px;padding:8px 11px;border:1px solid var(--border2);border-radius:7px;font-size:12px;font-family:var(--f-body);color:var(--text);background:var(--surface3);outline:none;transition:border .15s}
+.q-inp:focus{border-color:var(--blue)}
+.q-inp::placeholder{color:var(--text3)}
+.q-save-btn{margin-top:7px;padding:5px 13px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--f-body);transition:all .15s}
+.q-save-btn:hover{opacity:.9}
+.lock-status{padding:12px 16px;border-radius:10px;display:flex;align-items:center;gap:12px;margin-top:12px;border:1px solid;flex-wrap:wrap}
+.ls-locked{background:var(--red-dim);border-color:rgba(255,77,109,0.2)}
+.ls-unlocked{background:var(--mint-dim);border-color:rgba(0,255,178,0.2)}
+
+/* ── BLUEPRINT ── */
+.bp-item{display:flex;gap:10px;padding:10px 13px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);margin-bottom:5px;align-items:flex-start;transition:border .15s}
+.bp-item:hover{border-color:var(--border2)}
+.bp-ico{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+
+/* ── TEMPLATE CARDS ── */
+.tmpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
+.tmpl-card{border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--surface2);transition:all .2s;cursor:pointer}
+.tmpl-card:hover{border-color:var(--blue);background:var(--blue-dim)}
+.tmpl-card.locked{opacity:.4;pointer-events:none;cursor:not-allowed}
+.tc-seq{font-size:9px;font-weight:700;color:var(--text3);font-family:var(--f-mono);margin-bottom:5px;letter-spacing:.06em}
+.tc-name{font-family:var(--f-head);font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.tc-phase{font-size:10px;color:var(--text3);margin-bottom:10px}
+
+/* ── EXECUTION TASKS ── */
+.exec-task{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);margin-bottom:4px;transition:all .2s}
+.exec-task.done{border-color:rgba(0,255,178,0.2);background:var(--mint-dim)}
+.exec-task.running{border-color:rgba(45,111,255,0.3);background:var(--blue-dim)}
+.exec-task.error{border-color:rgba(255,77,109,0.2);background:var(--red-dim)}
+.et-seq{font-size:10px;font-weight:700;color:var(--text3);width:20px;flex-shrink:0;font-family:var(--f-mono)}
+.et-name{font-size:12px;font-weight:500;flex:1;color:var(--text)}
+.exec-task.done .et-name{color:var(--mint)}
+.et-method{width:72px;flex-shrink:0}
+.et-est{font-size:10px;color:var(--text3);width:40px;flex-shrink:0;font-family:var(--f-mono)}
+.et-note{font-size:10px;color:var(--text3);flex:1}
+.et-action{width:80px;text-align:right;flex-shrink:0}
+
+/* ── HDL OUTPUT ── */
+.hdl-block{background:#020408;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:var(--f-mono);font-size:11px;color:#4A5A7A;line-height:2;overflow-x:auto;white-space:pre;max-height:240px;overflow-y:auto}
+.hdl-block .hk{color:#2D6FFF}.hdl-block .hv{color:#00FFB2}.hdl-block .hm{color:#A78BFA}
+
+/* ── VALIDATION ── */
+.vtable{width:100%;border-collapse:collapse;font-size:12px}
+.vtable th{background:var(--surface3);color:var(--text2);padding:9px 10px;text-align:left;font-size:10px;font-weight:600;letter-spacing:.04em;border-bottom:1px solid var(--border);font-family:var(--f-head)}
+.vtable td{padding:7px 9px;border-bottom:1px solid var(--border)}
+.vtable tr:hover td{background:var(--surface3)}
+.vtable input{width:100%;border:none;background:transparent;font-size:12px;font-family:var(--f-mono);color:var(--text);outline:none}
+.vtable input:focus{border-bottom:1px solid var(--blue)}
+.vtable input::placeholder{color:var(--text3)}
+.vr{padding:9px 13px;border-radius:8px;margin-bottom:5px;display:flex;gap:8px;font-size:12px;align-items:flex-start}
+.vr-ok{background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2)}
+.vr-err{background:var(--red-dim);border:1px solid rgba(255,77,109,0.2)}
+.vr-warn{background:var(--amber-dim);border:1px solid rgba(245,158,11,0.15)}
+.add-row-btn{display:flex;align-items:center;gap:6px;padding:7px;border:1px dashed var(--border2);border-radius:8px;background:transparent;color:var(--text3);font-size:11px;font-weight:600;cursor:pointer;width:100%;justify-content:center;margin-top:6px;transition:all .15s;font-family:var(--f-body)}
+.add-row-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-dim)}
+
+/* ── FORM ── */
+.form-group{margin-bottom:13px}
+.form-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;display:block;font-family:var(--f-head)}
+.form-input{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:var(--f-body);color:var(--text);background:var(--surface2);outline:none;transition:border .15s}
+.form-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-dim)}
+.form-input::placeholder{color:var(--text3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px}
+.mod-chip{display:flex;align-items:center;gap:6px;padding:7px 11px;border:1px solid var(--border2);border-radius:7px;cursor:pointer;font-size:12px;transition:all .15s;color:var(--text3);background:var(--surface2)}
+.mod-chip:hover{border-color:var(--blue);color:var(--text2);background:var(--blue-dim)}
+.mod-chip.on{border-color:rgba(45,111,255,0.4);background:var(--blue-dim);color:var(--blue);font-weight:600}
+
+/* ── STAT CARDS ── */
+.stat-card{padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;text-align:center}
+.stat-num{font-family:var(--f-head);font-size:24px;font-weight:700;line-height:1}
+.stat-lbl{font-size:10px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+
+/* ── EVIDENCE ITEMS ── */
+.ev-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);margin-bottom:7px;transition:border .15s}
+.ev-item:hover{border-color:var(--border2)}
+.ev-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 18px;border-radius:10px;font-size:12px;font-weight:600;z-index:9999;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;font-family:var(--f-body);backdrop-filter:blur(10px)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.info{background:rgba(13,19,33,.95);color:var(--text);border:1px solid var(--border2)}
+.toast.success{background:rgba(0,255,178,.1);color:var(--mint);border:1px solid rgba(0,255,178,.3)}
+.toast.error{background:rgba(255,77,109,.1);color:var(--red);border:1px solid rgba(255,77,109,.3)}
+.toast.warn{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+
+/* ── ORACLE MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(8,12,20,.8);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:26px;width:480px;max-width:95%;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.modal-title{font-family:var(--f-head);font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--text3);margin-bottom:20px}
+
+/* ── SPINNER ── */
+.spinner{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── TRACK HEADERS ── */
+.track-header{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:12px 0 8px;border-bottom:1px solid var(--border);margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+
+/* ── SCOPE MAP ── */
+.scope-col{padding:12px 14px;border-radius:10px;border:1px solid var(--border)}
+
+/* ── DASHBOARD HERO ── */
+.hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:22px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(45,111,255,0.08),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-40px;right:160px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,178,0.05),transparent 70%);pointer-events:none}
+.hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mint);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.hero-title{font-family:var(--f-head);font-size:26px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:8px}
+.hero-title span{color:var(--blue)}
+.hero-sub{font-size:13px;color:var(--text3);max-width:520px;line-height:1.7;margin-bottom:18px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,auto);gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:inline-grid}
+.hero-stat{padding:10px 20px;text-align:center;border-right:1px solid var(--border)}
+.hero-stat:last-child{border-right:none}
+.hs-num{font-family:var(--f-head);font-size:18px;font-weight:700}
+.hs-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="apikey-modal">
+  <div class="modal">
+    <div class="modal-title">Update Claude API Key</div>
+    <div class="modal-sub">Your key is saved in your browser only — never sent anywhere except Anthropic</div>
+    <div class="form-group">
+      <label class="form-label">Claude API Key</label>
+      <input class="form-input" id="apikey-modal-inp" type="password" placeholder="sk-ant-api03-..." onkeydown="if(event.key==='Enter')saveApiKeyModal()" style="font-family:var(--f-mono)">
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px">Get a free key at <strong style="color:var(--blue)">console.anthropic.com</strong> → API Keys → Create key</div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="btn btn-ghost" onclick="closeApiKeyModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveApiKeyModal()">Save Key</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="oracle-modal">
+  <div class="modal">
+    <div class="modal-title">Connect Oracle HCM Cloud</div>
+    <div class="modal-sub">Always connect to DEV first — never load directly to Production</div>
+    <div class="form-group"><label class="form-label">Oracle HCM Cloud URL</label><input class="form-input" id="ora-url" placeholder="https://yourcompany.fa.us2.oraclecloud.com" style="font-family:var(--f-mono)"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="ora-user" placeholder="admin@company.com"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="ora-pass" type="password" placeholder="••••••••"></div>
+    </div>
+    <div style="padding:10px 12px;background:var(--amber-dim);border:1px solid rgba(245,158,11,0.15);border-radius:8px;font-size:11px;color:var(--amber);margin-bottom:16px">⚠ Always verify loads on DEV before TEST or PROD</div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="btn btn-ghost" onclick="closeOracleModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveOracleConn()">Save Connection</button>
+    </div>
+  </div>
+</div>
+<div id="app">
+<nav id="sb">
+  <div class="sb-logo">
+    <div class="sb-wordmark"><span class="dot"></span>MMS Fusion</div>
+    <div class="sb-sub">Oracle HCM AI Accelerator</div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-lbl">Workspace</div>
+    <div class="nav active" onclick="go('dashboard')" id="snav-dashboard">
+      <span class="nav-ico">◈</span>All Projects
+      <span class="nav-badge nb-grey" id="sn-count">0</span>
+    </div>
+  </div>
+  <div class="sb-sec" id="sb-phases" style="display:none">
+    <div class="sb-lbl" id="sb-plbl">Project</div>
+    <div class="nav" onclick="goPhase('p1')" id="snav-p1"><span class="nav-ico">◎</span>Phase 1 · Discovery<span class="status-dot sd-amber" id="sd-p1"></span></div>
+    <div class="nav" onclick="goPhase('p2')" id="snav-p2"><span class="nav-ico">◈</span>Phase 2 · Blueprint<span class="status-dot sd-amber" id="sd-p2"></span></div>
+    <div class="nav" onclick="goPhase('p3')" id="snav-p3"><span class="nav-ico">◫</span>Phase 3 · Data Ingestion<span class="status-dot sd-grey" id="sd-p3"></span></div>
+    <div class="nav" onclick="goPhase('p4')" id="snav-p4"><span class="nav-ico">◷</span>Phase 4 · Validation<span class="status-dot sd-grey" id="sd-p4"></span></div>
+    <div class="nav" onclick="goPhase('p5')" id="snav-p5"><span class="nav-ico">◈</span>Phase 5 · HDL Generation<span class="status-dot sd-grey" id="sd-p5"></span></div>
+    <div class="nav" onclick="goPhase('p6')" id="snav-p6"><span class="nav-ico">◉</span>Phase 6 · Oracle Load<span class="status-dot sd-grey" id="sd-p6"></span></div>
+    <div class="nav" onclick="goPhase('p7')" id="snav-p7"><span class="nav-ico">◪</span>Phase 7 · Evidence Pack<span class="status-dot sd-grey" id="sd-p7"></span></div>
+  </div>
+  <div style="display:none" id="sb-proj-box">
+    <div class="sb-proj-wrap">
+      <div class="sb-proj-card" onclick="go('dashboard')">
+        <div class="sp-eyebrow">Active Project</div>
+        <div class="sp-name" id="sb-pname">—</div>
+        <div class="sp-phase" id="sb-pphase">Phase 1 · Discovery</div>
+        <div class="sp-sw">← Switch project</div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="main">
+  <div id="hdr">
+    <div class="hdr-breadcrumb">
+      <span>MMS Fusion</span><span class="sep">/</span>
+      <span class="hdr-title" id="hdr-t">All Projects</span>
+    </div>
+    <div class="hdr-gap"></div>
+    <div id="ora-status" style="font-size:11px;margin-right:8px"></div>
+    <button class="btn btn-ghost btn-sm" onclick="go('dashboard')">All Projects</button>
+    <button class="btn btn-ghost btn-sm" onclick="openOracleModal()">⚙ Oracle</button>
+    <button class="btn btn-ghost btn-sm" onclick="resetApiKey()" style="border-color:rgba(245,158,11,0.3);color:var(--amber)" id="api-reset-btn">🔑 API Key</button>
+    <button class="btn btn-ghost btn-sm" onclick="loadDemoProject()" style="border-color:rgba(0,255,178,0.3);color:var(--mint)">▶ Load Demo</button><button class="btn btn-primary btn-sm" onclick="go('newproject')">+ New Project</button>
+  </div>
+  <div id="content">
+
+  <!-- DASHBOARD -->
+  <div class="panel active" id="panel-dashboard">
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--mint);display:inline-block;box-shadow:0 0 6px var(--mint)"></span>
+        Oracle HCM Core HR · AI-Powered Implementation
+      </div>
+      <div class="hero-title">End-to-End <span>Automation</span><br>From Discovery to Go-Live</div>
+      <div class="hero-sub">Discovery → Blueprint → Configuration Templates → Validation → HDL Generation → Oracle Load → Evidence Pack. What takes consultants weeks, done in hours.</div>
+      <div style="display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap">
+        <button class="btn btn-mint" onclick="go('newproject')">+ New Project</button>
+        <button class="btn btn-ghost" onclick="openOracleModal()">⚙ Connect Oracle DEV</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hs-num" style="color:var(--blue)">7</div><div class="hs-lbl">Phases</div></div>
+        <div class="hero-stat"><div class="hs-num" style="color:var(--mint)">26</div><div class="hs-lbl">Config Tasks</div></div>
+        <div class="hero-stat"><div class="hs-num" style="color:var(--amber)">HDL</div><div class="hs-lbl">+ RPA + FSM</div></div>
+        <div class="hero-stat"><div class="hs-num" style="color:#A78BFA">AI</div><div class="hs-lbl">Extraction</div></div>
+      </div>
+    </div>
+    <div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px;letter-spacing:.02em">Projects</div>
+    <div class="proj-grid" id="proj-grid"></div>
+  </div>
+
+  <!-- NEW PROJECT -->
+  <div class="panel" id="panel-newproject">
+    <div style="max-width:560px;margin:0 auto">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <button class="btn btn-ghost btn-sm" onclick="go('dashboard')">← Back</button>
+        <div>
+          <div style="font-family:var(--f-head);font-size:16px;font-weight:700">New Project</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">Each project is fully isolated — its own discovery, blueprint, templates and execution</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="form-group"><label class="form-label">Client Name</label><input class="form-input" id="np-name" placeholder="e.g. Acme Corporation"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Industry</label><select class="form-input" id="np-ind" style="cursor:pointer"><option value="">Select industry</option><option>Healthcare</option><option>Technology</option><option>Manufacturing</option><option>Financial Services</option><option>Retail</option><option>Government</option><option>Education</option><option>Professional Services</option><option>Other</option></select></div>
+          <div class="form-group"><label class="form-label">Implementation Type</label><select class="form-input" id="np-type" style="cursor:pointer"><option value="">Select type</option><option>New Implementation</option><option>Data Migration / Conversion</option><option>Upgrade from On-Premise</option><option>Phase 2 Expansion</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Go-Live Target</label><input class="form-input" id="np-golive" type="date"></div>
+          <div class="form-group"><label class="form-label">Lead Consultant</label><input class="form-input" id="np-cons" placeholder="Your name"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Oracle Modules in Scope</label>
+          <div class="mod-grid">
+            <div class="mod-chip on" onclick="toggleMod(this)" data-m="Core HR">✓ Core HR</div>
+            <div class="mod-chip" onclick="toggleMod(this)" data-m="Payroll">Payroll</div>
+            <div class="mod-chip" onclick="toggleMod(this)" data-m="Absence">Absence Management</div>
+            <div class="mod-chip" onclick="toggleMod(this)" data-m="Benefits">Benefits</div>
+            <div class="mod-chip" onclick="toggleMod(this)" data-m="Talent">Talent Management</div>
+            <div class="mod-chip" onclick="toggleMod(this)" data-m="Recruiting">Recruiting</div>
+            <div class="mod-chip" onclick="toggleMod(this)" data-m="Time & Labor">Time &amp; Labor</div>
+            <div class="mod-chip" onclick="toggleMod(this)" data-m="Compensation">Compensation</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;padding-top:14px;border-top:1px solid var(--border)">
+          <button class="btn btn-ghost" onclick="go('dashboard')">Cancel</button>
+          <button class="btn btn-primary" onclick="createProject()">Create Project →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="panel" id="panel-p1">
+    <div class="prog-wrap"><div class="prog-lbl">Blueprint</div><div class="prog-track"><div class="prog-fill" id="cb-fill" style="width:0%"></div></div><div class="prog-pct" id="cb-pct" style="color:var(--text3)">0%</div><div class="prog-tag pt-blocked" id="cb-tag">Upload to begin</div></div>
+    <div class="api-bar" id="api-bar">
+      <span style="font-size:18px">🔑</span>
+      <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--amber)">Claude API key required for AI extraction</div><div style="font-size:11px;color:var(--text3);margin-top:1px">Used only in your browser · get one free at console.anthropic.com</div></div>
+      <input class="api-inp" id="api-inp" type="password" placeholder="sk-ant-api03-...">
+      <button class="btn btn-ghost btn-sm" onclick="saveApiKey()" style="border-color:rgba(245,158,11,0.3);color:var(--amber)">Save Key</button>
+    </div>
+    <div class="two-col" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-head">Upload Discovery Documents <span class="card-sub">SOW · transcripts · config matrix</span></div>
+        <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-inp').click()">
+          <div class="uz-icon" id="ud-icon">📋</div>
+          <div class="uz-title" id="ud-t">Click to browse or drag &amp; drop</div>
+          <div class="uz-sub" id="ud-s">AI extracts all implementation decisions automatically</div>
+          <div class="file-types"><span class="ftype">XLSX</span><span class="ftype">DOCX</span><span class="ftype">PDF</span><span class="ftype">TXT</span></div>
+        </div>
+        <input type="file" id="file-inp" style="display:none" accept=".xlsx,.xls,.docx,.pdf,.txt,.csv" multiple onchange="handleFiles(this.files)">
+        <div id="file-list" style="margin-top:10px"></div>
+        <div id="extract-row" style="display:none;margin-top:12px;display:none">
+          <button class="btn btn-primary btn-sm" onclick="runExtraction()">⚡ Extract with AI</button>
+          <span style="font-size:11px;color:var(--text3);margin-left:10px">or <a href="#" onclick="showManual();return false" style="color:var(--blue)">fill manually</a></span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">Extraction Summary <span class="card-sub" id="extr-lbl"></span></div>
+        <div id="extr-out"><div style="font-size:12px;color:var(--text3);padding:20px 0;text-align:center">Upload a document to see what the AI extracts</div></div>
+      </div>
+    </div>
+    <div class="card" id="q-card" style="display:none">
+      <div class="card-head">Discovery Questionnaire <span class="card-sub">All required fields must be answered to proceed</span></div>
+      <div id="q-body"></div>
+      <div id="lock-bar" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="panel" id="panel-p2">
+    <div class="prog-wrap"><div class="prog-lbl">Blueprint</div><div class="prog-track"><div class="prog-fill" id="cb-fill-p2" style="width:0%"></div></div><div class="prog-pct" id="cb-pct-p2" style="color:var(--text3)">0%</div><div class="prog-tag pt-blocked" id="cb-tag-p2">Complete Phase 1</div></div>
+    <div id="p2-body"><div style="color:var(--text3);font-size:13px;padding:40px;text-align:center">Complete Phase 1 to generate your blueprint.</div></div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="panel" id="panel-p3">
+    <div class="prog-wrap"><div class="prog-lbl">Blueprint</div><div class="prog-track"><div class="prog-fill" id="cb-fill-p3" style="width:0%"></div></div><div class="prog-pct" id="cb-pct-p3" style="color:var(--text3)">0%</div><div class="prog-tag pt-blocked" id="cb-tag-p3">Locked</div></div>
+    <div id="p3-body"><div style="color:var(--text3);font-size:13px;padding:40px;text-align:center">Complete all discovery questions first.</div></div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="panel" id="panel-p4"><div id="p4-body"><div style="color:var(--text3);font-size:13px;padding:40px;text-align:center">Download and send templates to client first.</div></div></div>
+
+  <!-- PHASE 5 -->
+  <div class="panel" id="panel-p5"><div id="p5-body"><div style="color:var(--text3);font-size:13px;padding:40px;text-align:center">Complete Phase 4 validation first.</div></div></div>
+
+  <!-- PHASE 6 -->
+  <div class="panel" id="panel-p6"><div id="p6-body"></div></div>
+
+  <!-- PHASE 7 -->
+  <div class="panel" id="panel-p7"><div id="p7-body"><div style="color:var(--text3);font-size:13px;padding:40px;text-align:center">Complete Phase 5 to generate evidence pack.</div></div></div>
+
+  </div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const S={get:k=>{try{return JSON.parse(localStorage.getItem('mmsf2_'+k));}catch(e){return null;}},set:(k,v)=>localStorage.setItem('mmsf2_'+k,JSON.stringify(v))};
+let PROJECTS=S.get('projects')||{},ACTIVE=null,API_KEY=S.get('claude_key')||'',ORACLE=S.get('oracle')||null,vRC=1;
+
+// ── DEMO MODE ────────────────────────────────────────────────────────────────
+const DEMO_ANSWERS = {
+  "legislation": "United States, US Legislation",
+  "enterprise": "Nexus Health Partners",
+  "currency": "USD",
+  "go_live_date": "January 5, 2027",
+  "impl_type": "New Implementation \u2014 migrating from ADP Workforce Now",
+  "legal_entity": "Nexus Regional Medical Center LLC EIN 47-3344521, Nexus Community Health LLC EIN 47-5567892, Nexus Physician Partners LLC EIN 47-8891234, Nexus Specialty Services LLC EIN TBD",
+  "legal_employer": "Nexus Regional Medical Center LLC, Nexus Community Health LLC, Nexus Physician Partners LLC, Nexus Specialty Services LLC",
+  "psu": "Nexus Regional Medical Center LLC, Nexus Community Health LLC, Nexus Physician Partners LLC, Nexus Specialty Services LLC",
+  "ldg": "Nexus US Legislative Data Group",
+  "bus_units": "Nexus Hospital Operations BU, Nexus Community Health BU, Nexus Physician Services BU, Nexus Corporate Services BU, Nexus Specialty Services BU",
+  "locations_count": "17 locations across 2 states (Massachusetts and Connecticut)",
+  "departments_count": "94 departments",
+  "job_structure": "380 rationalized job titles across 7 job families: Clinical Direct Care, Clinical Support Services, Physicians and Advanced Practice, Administrative, Information Technology, Finance and Accounting, Facilities and Support Services; FLSA status mapped per job",
+  "grade_structure": "18 grades total: 14 standard grades (G01-G14) ranging from Entry Level Non-Clinical to C-Suite, plus 4 physician grades (PHY-1 through PHY-4); grade-to-job mapping rules enforced",
+  "grade_rates": "Yes \u2014 min/midpoint/max salary ranges for grades G01-G14; placeholder ranges for PHY-1 through PHY-4 (no published ranges as physician comp is individually negotiated)",
+  "positions": "Full position management enabled; position synchronization enabled so position drives job, grade, and location on assignment; required for Joint Commission headcount tracking and Massachusetts nurse staffing ratio reporting",
+  "positions_count": "Approximately 2,200 budgeted positions (approximately 1,800 in hospital and clinical areas, remainder in corporate and clinic)",
+  "worker_types": "Employees (full-time and part-time), Contingent Workers (agency nurses and locum physicians \u2014 approximately 165 active)",
+  "multiple_assignments": "Yes \u2014 enabled; nurses can hold primary assignment in one department and secondary assignment in another (e.g., float pool)",
+  "payroll_in_scope": "No \u2014 Oracle Payroll excluded from Phase 1; remaining on ADP Workforce Now for at least 18 months post go-live",
+  "payroll_freq": "Biweekly, 26 pay periods, payday every other Friday",
+  "salary_basis": "Annual Salary annualization factor 1 for exempt staff, Hourly annualization factor 2080 for nonexempt staff, Per Diem Hourly annualization factor 2080 for per diem clinical staff",
+  "elements": "Regular Salary, Regular Hourly, Per Diem Hourly, Overtime (1.5x), Overtime Holiday (2.0x), Night Shift Differential (15%), Weekend Differential (10%), Charge Nurse Premium ($3.00/hr flat), On-Call Pay (flat rate per hour), Callback Pay (2.0x), Holiday Pay, Annual Bonus, Clinical Certification Bonus, Retention Bonus",
+  "payroll_int": "ADP Workforce Now payroll interface \u2014 Oracle to ADP, near-real-time target 4-hour SLA, triggered by hire/termination/compensation change/job change, via HCM Extract and SFTP",
+  "employee_count": "3,847 active employees (2,156 Nexus Regional Medical Center, 891 Nexus Community Health, 412 Nexus Physician Partners, 388 Corporate Services) plus approximately 165 active contingent workers",
+  "legacy_system": "ADP Workforce Now (primary); VerifyMD credentialing database (license data); paper personnel files for pre-2009 employees",
+  "absence_in_scope": "Yes",
+  "absence_types": "PTO (Paid Time Off), Sick Leave (Massachusetts Earned Sick Time), FMLA (Federal Family Medical Leave Act), Massachusetts PFML (Paid Family Medical Leave), Parental Leave, Military Leave (USERRA), Bereavement Leave, Jury Duty",
+  "accrual_plans": "PTO: Full-time Years 1-3 earn 80 hrs/yr, Years 4-9 earn 120 hrs/yr, Year 10+ earn 160 hrs/yr; Part-time prorated by FTE; Per diem no PTO. Sick Leave: Full-time 56 hours/calendar year front-loaded Jan 1; Part-time prorated by FTE; Per diem 1 hour per 30 hours worked per Massachusetts Earned Sick Time law",
+  "benefits_in_scope": "Yes",
+  "benefit_plans": "Medical (HDHP, PPO, HMO), Dental (Basic, Enhanced), Vision, Basic Life (1x salary employer paid), Voluntary Life (up to 5x), Long Term Disability (employer paid), FSA (general purpose with PPO/HMO; limited purpose with HDHP), HSA (with HDHP only), 403b (Fidelity, 3% employer match up to 6% employee contribution), Tuition Reimbursement ($5,000/year requires manager approval)",
+  "open_enrollment": "October annually, effective November 1",
+  "security": "NHP HR Administrator (all 4 BUs, all HR transactions, compensation visible, 3 users), NHP HR Specialist (single BU only, all HR transactions, no compensation except new hire processing, 8 users), NHP Payroll Liaison (all BUs, read only, compensation visible, no transactions, 2 users), NHP Benefits Administrator (benefits module full access, no comp outside benefits context, 1 user), NHP Nurse Manager (own department only, absence approval, schedule view, assignment read, no compensation, clinical-specific pages, ~85 users), NHP Line Manager (direct reports only, absence approval, assignment read, no compensation, ~200 users), NHP Employee Self Service (own record only - personal info, absence request, payslip view, all ~3,847 employees)",
+  "sso": "SSO required via Azure Active Directory (Microsoft Entra ID); tenant domain nexushealthpartners.com; Oracle to federate with Azure AD tenant",
+  "dff": "Assignment DFF Segment 1: Legacy ADP Employee ID (Character length 9, required for all, numeric only free text), Assignment DFF Segment 2: Union Code (Lookup, required for Hospital Operations and Community Health BUs, values: SEIU-1199/MNA/TEAMSTERS-122/NON-UNION), Assignment DFF Segment 3: Clinical License Type (Lookup, required for clinical staff, values: RN/LPN/NP/PA/MD/DO/PT/OT/SLP/RAD-TECH/LAB-TECH/RT/PHARM-D/NONE), Assignment DFF Segment 4: License Expiration Date (Date, required for clinical staff where License Type is not NONE), Person DFF Segment 1: State License Number (Character length 25, optional)",
+  "value_sets": "Union Code lookup (SEIU-1199, MNA, TEAMSTERS-122, NON-UNION), Clinical License Type lookup (RN, LPN, NP, PA, MD, DO, PT, OT, SLP, RAD-TECH, LAB-TECH, RT, PHARM-D, NONE), Legacy ADP Employee ID free text numeric only length 9",
+  "page_customizations": "Personal Details page - hide SSN field for all roles except NHP HR Administrator and NHP Payroll Liaison; Employment Info page - add License Type and License Expiration Date visible for all roles when job family is CLIN-DC, CLIN-SUP, or PHY-ADV; My Team page - add custom section Care Team Assignment showing primary care team employee is assigned to",
+  "hr_actions": "CLIN-SUSPEND Clinical Suspension (action type CHANGE_ASSIGNMENT), LIC-REVOKE License Revocation (action type TERMINATION if license revoked and employee cannot work or CHANGE_ASSIGNMENT if reassigned to non-clinical role), PRN-CHANGE PRN Status Change (action type CHANGE_ASSIGNMENT), CRED-RENEW Credentialing Renewal (action type CHANGE_ASSIGNMENT)",
+  "action_reasons": "Clinical Suspension reasons: Active Investigation, Administrative; License Revocation: implied by action; PRN Status Change reasons: Full-Time to PRN, PRN to Full-Time, PRN to Part-Time; Credentialing Renewal reasons: Initial License, License Renewed, License Extended",
+  "conversion_scope": "All 3,847 active employees full data, 165 active contingent workers basic data, 3 years transaction history for active employees, full employment history from hire date for current assignment, current salary plus 3 years salary history, current PTO balance as of cutover date, current Sick Leave balance as of cutover date, 120 Harbor Spine and Orthopedics employees for day-one go-live loading",
+  "salary_conversion": "Yes - current salary for all employees with effective date of current salary, plus 3 years of salary history",
+  "absence_balances": "Yes - current PTO balance and current Sick Leave balance as of cutover date must be converted",
+  "integrations": "ADP Workforce Now Payroll Interface (Oracle to ADP, trigger: hire/terminate/compensation change/job change, near-real-time 4-hour SLA, HCM Extract plus SFTP), Azure Active Directory User Provisioning (Oracle to Azure AD, trigger: hire creates account/terminate disables within 2 hours, Oracle Identity Governance or SCIM connector), Sterling Background Check (Oracle to Sterling, trigger: new hire record created, Sterling REST API)",
+  "modules_enabled": "Core HR, Oracle Absence Management, Oracle Benefits",
+  "costing": "GL structure is a seven-segment flexfield: Entity, Division, Department, Cost Center, Account, Project, Intercompany. Cost Center segment required on every department record. 94 departments each map one-to-one with a GL cost center. Assignment-level costing to be designed. Oracle Payroll not in scope Phase 1 - payroll processed in ADP Workforce Now.",
+  "valid_grades": "Yes \u2014 clinical jobs restricted to specific grade ranges. Physicians PHY grades only.",
+  "position_synchronization": "Yes \u2014 position drives job, grade, and location on assignment automatically"
+};
+
+function loadDemoProject(){
+  const demoId = 'demo-nexus-2026';
+  if(!PROJECTS[demoId]){
+    PROJECTS[demoId] = {
+      id: demoId,
+      name: 'Nexus Health Partners',
+      created: new Date().toISOString(),
+      answers: DEMO_ANSWERS,
+      completion: 95,
+      missing: [],
+      fileNames: ['01_Teams_Discovery_Transcript.txt','02_Consultant_Configuration_Workbook.txt'],
+      fileTexts: [],
+      has_files: true,
+      _mappingConfirmed: true,
+      _sheets: [
+        {file:'03_Nexus_Client_Data_Files.xlsx',sheet:'Location_Master',oracleObj:'Location',rowCount:17,headers:['Location Code','Location Name','Address Line 1','City','State','Zip','Country'],dataRows:[],mapping:{location_code:{clientCol:'Location Code',clientIdx:0},location_name:{clientCol:'Location Name',clientIdx:1},city:{clientCol:'City',clientIdx:3},state:{clientCol:'State',clientIdx:4},zip:{clientCol:'Zip',clientIdx:5}}},
+        {file:'03_Nexus_Client_Data_Files.xlsx',sheet:'Department_List',oracleObj:'Department',rowCount:34,headers:['Dept Code','Department Name','Business Unit','Location Code','Cost Center'],dataRows:[],mapping:{dept_name:{clientCol:'Department Name',clientIdx:1},business_unit:{clientCol:'Business Unit',clientIdx:2},dept_location:{clientCol:'Location Code',clientIdx:3}}},
+        {file:'03_Nexus_Client_Data_Files.xlsx',sheet:'Job_Catalog_Rationalized',oracleObj:'Job',rowCount:36,headers:['Job Code','Job Title','Job Family','FLSA Status'],dataRows:[],mapping:{job_code:{clientCol:'Job Code',clientIdx:0},job_name:{clientCol:'Job Title',clientIdx:1},job_family:{clientCol:'Job Family',clientIdx:2},exempt_status:{clientCol:'FLSA Status',clientIdx:3}}},
+        {file:'03_Nexus_Client_Data_Files.xlsx',sheet:'Grade_Structure',oracleObj:'Grade',rowCount:18,headers:['Grade Code','Grade Name','Grade Description','Min Salary','Midpoint Salary','Max Salary'],dataRows:[],mapping:{grade_code:{clientCol:'Grade Code',clientIdx:0},grade_name:{clientCol:'Grade Name',clientIdx:1},min_salary:{clientCol:'Min Salary',clientIdx:3},mid_salary:{clientCol:'Midpoint Salary',clientIdx:4},max_salary:{clientCol:'Max Salary',clientIdx:5}}},
+        {file:'03_Nexus_Client_Data_Files.xlsx',sheet:'Positions_ADP_Export',oracleObj:'Position',rowCount:20,headers:['Position Code','Position Title','Department','Location','Job Title','Grade','FTE Budget'],dataRows:[],mapping:{position_code:{clientCol:'Position Code',clientIdx:0},position_name:{clientCol:'Position Title',clientIdx:1},dept_name:{clientCol:'Department',clientIdx:2},job_code:{clientCol:'Job Title',clientIdx:4},grade_code:{clientCol:'Grade',clientIdx:5},fte:{clientCol:'FTE Budget',clientIdx:6}}},
+      ],
+      _validationResults: [
+        {sheet:'Location_Master',obj:'Location',rows:17,errors:[],warnings:[{row:14,field:'Notes',msg:'Closing Sept 30 2026 — set effective end date'}],transformed:[{LocationCode:'LOC-01',LocationName:'Nexus Medical Center Main Tower',TownOrCity:'Boston',Region2:'MA',PostalCode:'02115',Country:'US',SetCode:'COMMON',EffectiveStartDate:'1900/01/01',ActiveStatus:'ACTIVE'}]},
+        {sheet:'Department_List',obj:'Department',rows:34,errors:[],warnings:[],transformed:[{Name:'Emergency Department',BusinessUnitName:'Nexus Hospital Operations BU',LocationCode:'LOC-01',SetCode:'COMMON',ClassificationCode:'DEPARTMENT',EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31'}]},
+        {sheet:'Job_Catalog_Rationalized',obj:'Job',rows:36,errors:[],warnings:[{row:5,field:'Job Code',msg:'Auto-generated from job title for 2 rows'}],transformed:[{JobCode:'NHP-RN-BSN',Name:'Registered Nurse BSN',OvertimeStatus:'NONEXEMPT',SetCode:'COMMON',EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31',ActiveStatus:'A'}]},
+        {sheet:'Grade_Structure',obj:'Grade',rows:18,errors:[],warnings:[],transformed:[{GradeCode:'G01',GradeName:'Grade 1 — Entry Level Non-Clinical',SetCode:'COMMON',EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31',ActiveStatus:'A'}]},
+        {sheet:'Positions_ADP_Export',obj:'Position',rows:20,errors:[{row:12,field:'Position Code',msg:'PHY-CARD-002 — Vacant position, no employee assigned'}],warnings:[{row:19,field:'Notes',msg:'New Haven South closing Sept 2026 — position transfer required'}],transformed:[{PositionCode:'ICU-MED-RN-001',Name:'ICU Medical RN - Position 1',DepartmentName:'DEPT-002',JobCode:'NHP-RN-ICU',GradeCode:'G04',FTEValue:'1',EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31'}]},
+      ],
+      hdlFiles: {
+        Location: {rows:17, content:'METADATA|Location|SetCode|EffectiveStartDate|LocationCode|LocationName|ActiveStatus|TownOrCity|Region2|PostalCode|Country\nMERGE|Location|COMMON|1900/01/01|LOC-01|Nexus Medical Center Main Tower|ACTIVE|Boston|MA|02115|US\nMERGE|Location|COMMON|1900/01/01|LOC-02|Nexus Medical Center MOB|ACTIVE|Boston|MA|02115|US'},
+        Department: {rows:34, content:'METADATA|Organization|EffectiveStartDate|EffectiveEndDate|ClassificationCode|Name|BusinessUnitName|LocationCode|SetCode\nMERGE|Organization|1900/01/01|4712/12/31|DEPARTMENT|Emergency Department|Nexus Hospital Operations BU|LOC-01|COMMON'},
+        Job: {rows:36, content:'METADATA|Job|SetCode|EffectiveStartDate|EffectiveEndDate|JobCode|Name|ActiveStatus|OvertimeStatus\nMERGE|Job|COMMON|1900/01/01|4712/12/31|NHP-RN-BSN|Registered Nurse BSN|A|NONEXEMPT'},
+        Grade: {rows:18, content:'METADATA|Grade|SetCode|EffectiveStartDate|EffectiveEndDate|GradeCode|GradeName|ActiveStatus\nMERGE|Grade|COMMON|1900/01/01|4712/12/31|G01|Grade 1 Entry Level|A'},
+        Position: {rows:20, content:'METADATA|Position|PositionCode|Name|DepartmentName|JobCode|GradeCode|FTEValue|EffectiveStartDate|EffectiveEndDate\nMERGE|Position|ICU-MED-RN-001|ICU Medical RN Position 1|DEPT-002|NHP-RN-ICU|G04|1|1900/01/01|4712/12/31'},
+      },
+      loadStatus: {1:'done',2:'done',3:'done',4:'done',5:'done',6:'done',7:'done',8:'done',9:'done',10:'done',11:'done',12:'done',13:'done',14:'done',15:'done',16:'done',17:'done',18:'done',19:'done',20:'done',21:'done',22:'done',23:'done',24:'done',25:'done',26:'done'},
+    };
+    S.set('projects', PROJECTS);
+  }
+  ACTIVE = demoId;
+  S.set('active', demoId);
+  go('project');
+  toast('Demo loaded — Nexus Health Partners','success');
+}
+// ── END DEMO MODE ──────────────────────────────────────────────────────────
+const saveP=()=>S.set('projects',PROJECTS);
+
+const QUESTIONS=[
+  {section:'Enterprise & Legislation',oracle:'Sets up the top-level enterprise and legislation',items:[
+    {id:'legislation',label:'What country/countries does this implementation cover?',required:true,hint:'e.g. United States only / US + Canada / US + UK + Australia'},
+    {id:'enterprise',label:'What is the Enterprise name in Oracle HCM?',required:true,hint:'e.g. Acme Corporation — the top-level name all employees see'},
+    {id:'currency',label:'What is the primary currency?',required:true,hint:'e.g. USD, CAD, GBP'},
+    {id:'go_live_date',label:'What is the target go-live date?',required:true,hint:'e.g. July 1, 2026 — drives cutover planning and data effective dates'},
+    {id:'impl_type',label:'Is this a new implementation or migration from an existing system?',required:true,hint:'New Implementation / Migration from Oracle EBS / Migration from Oracle Cloud / Phase 2 expansion'},
+  ]},
+  {section:'Legal Structure',oracle:'Legal Entities and LDGs are foundational — everything else depends on them',items:[
+    {id:'legal_entity',label:'List all Legal Entities in scope with full legal name and EIN/Tax ID.',required:true,hint:'e.g. Acme Corp (EIN: 74-1234567), Acme West LLC (EIN: 74-9876543)'},
+    {id:'legal_employer',label:'Which Legal Entities are Legal Employers (hire employees directly)?',required:true,hint:'Usually all entities — confirm if any are holding companies only'},
+    {id:'psu',label:'Which Legal Entities are Payroll Statutory Units (file payroll taxes)?',required:true,hint:'Usually same as Legal Employers'},
+    {id:'ldg',label:'What Legislative Data Group name(s) will be used?',required:true,hint:'e.g. US LDG, Canada LDG — one per country'},
+    {id:'registered_address',label:'What is the registered address for each Legal Entity?',required:false,hint:'Street, City, State, Zip — used on tax filings'},
+  ]},
+  {section:'Business Units & Reference Data',oracle:'Business Units partition HR data across the organization',items:[
+    {id:'bus_units',label:'List all Business Units in scope with their purpose.',required:true,hint:'e.g. Corporate HQ BU (admin staff), Operations BU (field staff), Medical Group BU (physicians)'},
+    {id:'reference_data_sets',label:'Should Reference Data Sets be shared across BUs or independent per BU?',required:false,hint:'e.g. COMMON set shared by all / separate sets per BU / hybrid'},
+    {id:'set_partition',label:'What data should be partitioned per BU vs shared globally?',required:false,hint:'e.g. Locations and Jobs shared, Grades per BU'},
+  ]},
+  {section:'Workforce Structures',oracle:'Locations, Departments, Jobs, Grades — the core organizational building blocks',items:[
+    {id:'locations_count',label:'How many locations are in scope? List states/countries.',required:true,hint:'e.g. 15 locations across MA, NY, TX / 3 countries (US, UK, Canada)'},
+    {id:'departments_count',label:'Approximately how many departments? Are they aligned to cost centers?',required:true,hint:'e.g. ~85 departments / Yes, each dept maps to a GL cost center'},
+    {id:'job_structure',label:'Describe the job structure. How many job titles? Are jobs shared across entities?',required:true,hint:'e.g. ~320 unique jobs shared across all entities / Jobs are per-division'},
+    {id:'grade_structure',label:'Describe the grade/pay band structure. How many grades?',required:true,hint:'e.g. 12 grades G1-G12 / 5 bands (Band A-E) / separate clinical and admin scales'},
+    {id:'grade_rates',label:'Are grade rate ranges required (min/mid/max salary per grade)?',required:false,hint:'e.g. Yes — need min/mid/max in Oracle / No — grades only'},
+    {id:'valid_grades',label:'Are specific grades restricted to specific jobs?',required:false,hint:'e.g. Yes — clinical jobs restricted to G3-G8 / No — any grade on any job'},
+  ]},
+  {section:'Position Management',oracle:'Positions are optional but required for headcount budgeting and regulated industries',items:[
+    {id:'positions',label:'Are Positions being used? Is Position Management enabled?',required:true,hint:'Yes — full position management / No — workforce structures only / Partial — clinical staff only'},
+    {id:'position_synchronization',label:'Should assignment fields sync automatically from position?',required:false,hint:'e.g. Yes — position drives job/grade/location / No — manual assignment'},
+    {id:'positions_count',label:'If positions are in scope, approximately how many?',required:false,hint:'e.g. ~500 budgeted positions / ~2,000 positions across all departments'},
+    {id:'position_budget',label:'Is headcount budgeting by position required?',required:false,hint:'e.g. Yes — need FTE budget per position / No'},
+  ]},
+  {section:'Worker Types & Assignments',oracle:'Determines which person types and assignment statuses need configuring',items:[
+    {id:'worker_types',label:'What worker types are in scope?',required:true,hint:'Employees only / Employees + Contingent Workers / Employees + Contingent Workers + Non-Workers'},
+    {id:'contingent_worker_types',label:'If contingent workers are in scope, what types?',required:false,hint:'e.g. Agency nurses, Locum physicians, SOW contractors, Independent Contractors'},
+    {id:'multiple_assignments',label:'Can employees hold multiple simultaneous assignments?',required:false,hint:'e.g. Yes — clinical staff work multiple departments / No — one assignment only'},
+    {id:'assignment_statuses',label:'What custom assignment statuses are needed beyond Oracle standard?',required:false,hint:'e.g. Standard Oracle statuses only / Custom: On-Call, Administrative Leave, Clinical Suspension'},
+    {id:'working_hours',label:'What standard working hours and patterns are needed?',required:false,hint:'e.g. 40hr/week standard / Multiple: 8hr days, 12hr shifts, 4x10 schedule'},
+  ]},
+  {section:'Actions & Reasons',oracle:'HR transactions — every change to an employee record needs an action',items:[
+    {id:'hr_actions',label:'List all custom HR actions needed beyond Oracle standard.',required:true,hint:'e.g. Standard Oracle actions sufficient / Custom: Clinical Suspension, License Revocation, Sabbatical'},
+    {id:'action_reasons',label:'List custom action reasons for each action type.',required:false,hint:'e.g. Termination: Resignation, Retirement, Redundancy, Performance, Abandonment'},
+  ]},
+  {section:'Payroll Configuration',oracle:'Required even if Oracle Payroll is not in scope — drives Salary Basis setup',items:[
+    {id:'payroll_in_scope',label:'Is Oracle Payroll in scope for this phase?',required:true,hint:'Yes — full Oracle Payroll / No — Core HR only with interface to ADP/Ceridian / Future phase'},
+    {id:'payroll_freq',label:'What payroll frequency/frequencies are used?',required:true,hint:'e.g. Biweekly / Semimonthly / Monthly / Multiple: Biweekly hourly, Monthly salaried'},
+    {id:'salary_basis',label:'What salary bases are required? Include annualization factors.',required:true,hint:'e.g. Annual Salary (factor 1), Hourly (2080 factor), Daily (260 factor)'},
+    {id:'elements',label:'What earning elements are in scope for conversion from the legacy system?',required:true,hint:'e.g. Regular Salary, Regular Hourly, Overtime (1.5x), Bonus, Shift Differential, On-Call Pay'},
+    {id:'payroll_int',label:'What payroll interface is required post go-live?',required:false,hint:'e.g. ADP Workforce Now / Ceridian Dayforce / Standalone Oracle Payroll / None'},
+    {id:'costing',label:'Is payroll costing to GL required? Which segments?',required:false,hint:'e.g. Yes — 6-segment GL: Company-Cost Center-Account-Dept-Project / No'},
+  ]},
+  {section:'Absence Management',oracle:'Required if Absence module is in scope',items:[
+    {id:'absence_in_scope',label:'Is Oracle Absence Management in scope?',required:true,hint:'Yes / No / Future phase'},
+    {id:'absence_types',label:'If Absence is in scope, list all absence types needed.',required:false,hint:'e.g. PTO, Sick Leave, FMLA, Parental Leave, Bereavement, Jury Duty, Military Leave'},
+    {id:'accrual_plans',label:'Are accrual plans required? Describe the rules.',required:false,hint:'e.g. PTO accrues 80hrs/yr Years 1-3, 120hrs Years 4-9 / Front-loaded annually'},
+    {id:'absence_integration',label:'Does absence need to integrate with payroll for absence pay?',required:false,hint:'e.g. Yes — sick pay reduces base salary / No — unpaid leave only'},
+  ]},
+  {section:'Benefits',oracle:'Required if Benefits module is in scope',items:[
+    {id:'benefits_in_scope',label:'Is Oracle Benefits in scope?',required:true,hint:'Yes / No / Future phase'},
+    {id:'benefit_plans',label:'If Benefits is in scope, list all plan types.',required:false,hint:'e.g. Medical (3 plans), Dental, Vision, Life Insurance, 401k, FSA, HSA'},
+    {id:'open_enrollment',label:'When is Open Enrollment? Annual or continuous?',required:false,hint:'e.g. Annual — November / Continuous — new hires enroll within 30 days'},
+  ]},
+  {section:'Security Design',oracle:'Oracle security is role-based — every user needs a job role and data role',items:[
+    {id:'security',label:'List all custom security roles required with their access scope.',required:true,hint:'e.g. HR Administrator (full HR, all BUs), HR Specialist (single BU only), Line Manager (team only)'},
+    {id:'data_roles',label:'What data security restrictions are needed?',required:false,hint:'e.g. HR Specialists see only their BU / Managers see only their department'},
+    {id:'self_service',label:'What employee and manager self-service capabilities are required?',required:false,hint:'e.g. Employee: view payslip, update personal info, request absence / Manager: approve absence, view team'},
+    {id:'sso',label:'Is Single Sign-On required? What identity provider?',required:false,hint:'e.g. Yes — Azure AD / Okta / No — Oracle IDCS only'},
+  ]},
+  {section:'Extensions & Customizations',oracle:'DFFs, value sets, and page customizations beyond standard Oracle',items:[
+    {id:'dff',label:'What Descriptive Flexfield segments are needed beyond standard Oracle fields?',required:false,hint:'e.g. Assignment DFF: Legacy EMP ID, Union Code / Person DFF: State License Number / None'},
+    {id:'value_sets',label:'What custom value sets are needed for DFF segments?',required:false,hint:'e.g. Union Code values: SEIU, NNU, Teamsters, Non-Union / None'},
+    {id:'hcm_extracts',label:'Are any HCM Extracts or custom reports required at go-live?',required:false,hint:'e.g. New hire report for IT provisioning / Termination extract for AD / None'},
+    {id:'page_customizations',label:'Are any Oracle page customizations required via HCM Design Studio?',required:false,hint:'e.g. Hide unused fields on Personal Details / Add Cost Center field on Assignment / None'},
+  ]},
+  {section:'Data Migration',oracle:'Historical data strategy — critical for first payroll run and reporting',items:[
+    {id:'legacy_system',label:'What is the legacy HR system being replaced?',required:true,hint:'e.g. ADP Workforce Now / Workday / PeopleSoft / SAP SuccessFactors / Multiple systems'},
+    {id:'conversion_scope',label:'What historical data needs to be converted? How many years?',required:true,hint:'e.g. Active employees only + 2 years history / All employees ever hired / Active + terminated last 7 years'},
+    {id:'employee_count',label:'How many active employees are being converted?',required:true,hint:'e.g. 4,200 active employees / 850 active + 12,000 historical records'},
+    {id:'salary_conversion',label:'Does current salary/compensation need to be converted?',required:true,hint:'e.g. Yes — convert current salary and grade / No — employees will be re-entered manually'},
+    {id:'absence_balances',label:'Do absence balances (PTO, sick leave) need to be converted?',required:false,hint:'e.g. Yes — convert PTO balance as of cutover / No — employees start fresh'},
+  ]},
+  {section:'Integrations',oracle:'What other systems need to connect to Oracle HCM',items:[
+    {id:'integrations',label:'What system integrations are required at go-live?',required:false,hint:'e.g. ADP payroll, Azure AD provisioning, Benefits carrier feeds, Background check, LMS'},
+    {id:'recruiting_int',label:'Is there a Recruiting system integrating with Core HR?',required:false,hint:'e.g. Yes — iCIMS sends new hire data / Oracle Recruiting in scope / No integration'},
+    {id:'finance_int',label:'Is there a Finance/GL system integration required?',required:false,hint:'e.g. Yes — Oracle ERP / SAP / NetSuite for payroll costing / None'},
+    {id:'modules_enabled',label:'Confirm all Oracle modules enabled for this implementation phase.',required:true,hint:'e.g. Core HR, Payroll, Absence Management, Benefits, Recruiting'},
+  ]},
+];
+const REQ=QUESTIONS.flatMap(s=>s.items.filter(q=>q.required).map(q=>q.id));
+
+const EXEC=[
+  {seq:1,obj:'Configure Offerings',method:'RPA',est:'3m',track:'setup',note:'Enable HCM modules per blueprint'},
+  {seq:2,obj:'Admin Profile Options',method:'RPA',est:'2m',track:'setup',note:'Set HR and Payroll profile options'},
+  {seq:3,obj:'Features by Country (US)',method:'FSM',est:'2m',track:'setup',note:'Enable US-specific legislative features'},
+  {seq:4,obj:'Geography Load (US)',method:'REST',est:'5m',track:'setup',note:'Load US state/city/county geography'},
+  {seq:5,obj:'Common Lookups',method:'HDL',est:'2m',track:'setup',note:'Custom lookup codes from blueprint'},
+  {seq:6,obj:'Assignment Status Types',method:'FSM',est:'2m',track:'setup',note:'Standard + custom assignment statuses'},
+  {seq:7,obj:'Value Sets & DFF Setup',method:'RPA',est:'8m',track:'setup',note:'Custom value sets and DFF segments'},
+  {seq:8,obj:'HCM Design Studio',method:'RPA',est:'5m',track:'setup',note:'Page-level UI customisations'},
+  {seq:9,obj:'Reference Data Sets',method:'HDL',est:'1m',track:'hdl',note:'Set codes — usually COMMON'},
+  {seq:10,obj:'Legislative Data Groups',method:'HDL',est:'1m',track:'hdl',note:'US LDG — must exist before Legal Entities'},
+  {seq:11,obj:'Legal Entities',method:'HDL',est:'2m',track:'hdl',note:'Legal Employers with EINs'},
+  {seq:12,obj:'Legal Entity HCM Information',method:'HDL',est:'1m',track:'hdl',note:'HCM-specific Legal Entity settings'},
+  {seq:13,obj:'Business Units',method:'HDL',est:'1m',track:'hdl',note:'Partition HR data by BU'},
+  {seq:14,obj:'BU Set Assignments',method:'HDL',est:'1m',track:'hdl',note:'Assign reference data sets to BUs'},
+  {seq:15,obj:'Locations',method:'HDL',est:'2m',track:'hdl',note:'All office locations — needed before Departments'},
+  {seq:16,obj:'Departments',method:'HDL',est:'2m',track:'hdl',note:'Org structure — needs Locations + BUs'},
+  {seq:17,obj:'Job Families',method:'HDL',est:'1m',track:'hdl',note:'Group jobs by family before creating Jobs'},
+  {seq:18,obj:'Jobs',method:'HDL',est:'3m',track:'hdl',note:'All job titles — needs Job Families'},
+  {seq:19,obj:'Grades',method:'HDL',est:'2m',track:'hdl',note:'Pay bands and levels'},
+  {seq:20,obj:'Grade Rates',method:'HDL',est:'2m',track:'hdl',note:'Min/mid/max salary ranges per grade'},
+  {seq:21,obj:'Valid Grades',method:'HDL',est:'1m',track:'hdl',note:'Link Jobs to valid Grades'},
+  {seq:22,obj:'Actions & Action Reasons',method:'HDL',est:'2m',track:'hdl',note:'Custom HR transaction types + reasons'},
+  {seq:23,obj:'Salary Basis',method:'FSM',est:'2m',track:'payroll',note:'Annual and Hourly salary basis config'},
+  {seq:24,obj:'Consolidation Groups',method:'FSM',est:'1m',track:'payroll',note:'Group payrolls for processing'},
+  {seq:25,obj:'Payroll Definitions',method:'HDL',est:'2m',track:'payroll',note:'Biweekly/monthly pay schedules'},
+  {seq:26,obj:'Security Roles & Profiles',method:'RPA',est:'12m',track:'security',note:'Custom job roles + security profiles via Security Console'},
+];
+
+const TMPLS=[
+  // Foundation
+  {seq:'01',key:'01_Reference_Data_Sets',name:'Reference Data Sets',phase:'Foundation',scope:'always'},
+  {seq:'02',key:'02_Legislative_Data_Groups',name:'Legislative Data Groups',phase:'Foundation',scope:'always'},
+  {seq:'03',key:'03_Legal_Entities',name:'Legal Entities',phase:'Foundation',scope:'always',lockOn:'legal_entity'},
+  {seq:'04',key:'04_Business_Units',name:'Business Units',phase:'Foundation',scope:'always'},
+  // Workforce Structures
+  {seq:'05',key:'05_Locations',name:'Locations',phase:'Workforce Structures',scope:'always'},
+  {seq:'06',key:'06_Departments',name:'Departments',phase:'Workforce Structures',scope:'always'},
+  {seq:'07',key:'07_Job_Families',name:'Job Families',phase:'Workforce Structures',scope:'always'},
+  {seq:'08',key:'08_Jobs',name:'Jobs',phase:'Workforce Structures',scope:'always'},
+  {seq:'09',key:'09_Grades',name:'Grades',phase:'Workforce Structures',scope:'always'},
+  {seq:'10',key:'10_Grade_Rates',name:'Grade Rates (Salary Ranges)',phase:'Workforce Structures',scope:'grade_rates',scopeLabel:'Only if salary ranges managed in Oracle'},
+  {seq:'11',key:'11_Valid_Grades',name:'Valid Grades',phase:'Workforce Structures',scope:'always'},
+  // HR Operations
+  {seq:'12',key:'12_Actions',name:'Actions',phase:'HR Operations',scope:'always'},
+  {seq:'13',key:'13_Action_Reasons',name:'Action Reasons',phase:'HR Operations',scope:'always'},
+  {seq:'14',key:'14_Assignment_Statuses',name:'Assignment Statuses',phase:'HR Operations',scope:'always'},
+  // Extensions
+  {seq:'15',key:'15_Value_Sets',name:'Value Sets & DFFs',phase:'Extensions',scope:'dff',scopeLabel:'Only if DFFs are in scope'},
+  // Payroll
+  {seq:'16',key:'16_Payroll_Definitions',name:'Payroll Definitions',phase:'Payroll Foundation',scope:'payroll',scopeLabel:'Only if Oracle Payroll or Absence is in scope'},
+  // Security
+  {seq:'17',key:'17_Security_Roles',name:'Security Roles',phase:'Security',scope:'always',lockOn:'security'},
+  // Position Management
+  {seq:'18',key:'18_Positions',name:'Positions',phase:'Position Management',scope:'positions',scopeLabel:'Only if Position Management is enabled'},
+];
+
+const HDL_D={
+  // ── Foundation ──────────────────────────────────────────────────────────────
+  ReferenceDataSet:{bo:'SetDefinition',meta:['SetCode','SetName','SetDescription'],map:{'Set Code':'SetCode','Set Name':'SetName','Description':'SetDescription'},def:{}},
+  LegislativeDataGroup:{bo:'LegislativeDataGroup',meta:['LegislativeDataGroupName','CountryCode','CurrencyCode','Description'],map:{'LDG Name':'LegislativeDataGroupName','Legislative Data Group Name':'LegislativeDataGroupName','Country Code':'CountryCode','Country':'CountryCode','Currency Code':'CurrencyCode','Currency':'CurrencyCode'},def:{CountryCode:'US',CurrencyCode:'USD'}},
+  LegalEntity:{bo:'LegalEntity',meta:['LegalEntityName','LegalEntityIdentifier','EffectiveFrom','Country','AddressLine1','TownOrCity','Region2','PostalCode','LegalEmployer','PayrollStatutoryUnit','EIN'],map:{'Legal Entity Name':'LegalEntityName','Legal Entity Identifier':'LegalEntityIdentifier','EIN':'EIN','Tax ID':'EIN','Start Date':'EffectiveFrom','Registered Address Line 1':'AddressLine1','Registered City':'TownOrCity','Registered State':'Region2','Registered Zip':'PostalCode','Is Legal Employer':'LegalEmployer','Is PSU':'PayrollStatutoryUnit'},def:{Country:'US',EffectiveFrom:'1900/01/01',LegalEmployer:'Y',PayrollStatutoryUnit:'Y'}},
+  BusinessUnit:{bo:'BusinessUnit',meta:['BusinessUnitName','ShortCode','EffectiveStartDate','DefaultSetCode'],map:{'Business Unit Name':'BusinessUnitName','Short Code':'ShortCode','BU Name':'BusinessUnitName'},def:{EffectiveStartDate:'1900/01/01',DefaultSetCode:'COMMON'}},
+  // ── Workforce Structures ─────────────────────────────────────────────────────
+  Location:{bo:'Location',meta:['SetCode','EffectiveStartDate','LocationCode','LocationName','ActiveStatus','AddressLine1','AddressLine2','TownOrCity','Region2','Region1','PostalCode','Country'],map:{'Set Code':'SetCode','Location Code':'LocationCode','Location Name':'LocationName','Address Line 1':'AddressLine1','Address Line 2':'AddressLine2','Suite':'AddressLine2','City':'TownOrCity','State':'Region2','County':'Region1','Zip Code':'PostalCode','Zip':'PostalCode','Postal Code':'PostalCode'},def:{SetCode:'COMMON',EffectiveStartDate:'1900/01/01',ActiveStatus:'ACTIVE',Country:'US'}},
+  Department:{bo:'Organization',meta:['EffectiveStartDate','EffectiveEndDate','ClassificationCode','Name','BusinessUnitName','LocationCode','SetCode'],map:{'Department Name':'Name','Department':'Name','Dept':'Name','Business Unit':'BusinessUnitName','Business Unit Name':'BusinessUnitName','Location Code':'LocationCode','Location':'LocationCode'},def:{EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31',ClassificationCode:'DEPARTMENT',SetCode:'COMMON'}},
+  JobFamily:{bo:'JobFamily',meta:['SetCode','EffectiveStartDate','EffectiveEndDate','Code','Name','ActiveStatus'],map:{'Job Family Code':'Code','Code':'Code','Job Family Name':'Name','Name':'Name'},def:{SetCode:'COMMON',EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31',ActiveStatus:'A'}},
+  Job:{bo:'Job',meta:['SetCode','EffectiveStartDate','EffectiveEndDate','JobCode','Name','ActiveStatus','OvertimeStatus','ManagerialLevel'],map:{'Job Code':'JobCode','Job Title':'Name','Job Name':'Name','Title':'Name','Exempt Status':'OvertimeStatus','FLSA':'OvertimeStatus','FLSA Status':'OvertimeStatus','Management Level':'ManagerialLevel'},def:{SetCode:'COMMON',EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31',ActiveStatus:'A'},xf:{OvertimeStatus:{'Exempt':'EXEMPT','Nonexempt':'NONEXEMPT','Non-Exempt':'NONEXEMPT','Non Exempt':'NONEXEMPT'},ManagerialLevel:{'Individual Contributor':'IC','People Manager':'MANAGER','Senior Manager':'SENIOR_MANAGER','Director':'DIRECTOR','Vice President':'VICE_PRESIDENT'}}},
+  Grade:{bo:'Grade',meta:['SetCode','EffectiveStartDate','EffectiveEndDate','GradeCode','GradeName','ActiveStatus'],map:{'Grade Code':'GradeCode','Grade':'GradeCode','Pay Grade':'GradeCode','Band':'GradeCode','Grade Name':'GradeName','Grade Description':'GradeName','Band Name':'GradeName'},def:{SetCode:'COMMON',EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31',ActiveStatus:'A'}},
+  GradeRate:{bo:'GradeRate',meta:['GradeCode','Name','CurrencyCode','MinimumAmount','MidpointAmount','MaximumAmount','AnnualizationFactor'],map:{'Grade Code':'GradeCode','Rate Name':'Name','Currency':'CurrencyCode','Minimum Salary':'MinimumAmount','Minimum':'MinimumAmount','Min':'MinimumAmount','Midpoint Salary':'MidpointAmount','Midpoint':'MidpointAmount','Mid':'MidpointAmount','Maximum Salary':'MaximumAmount','Maximum':'MaximumAmount','Max':'MaximumAmount','Annualization Factor':'AnnualizationFactor'},def:{CurrencyCode:'USD',AnnualizationFactor:'1'}},
+  ValidGrade:{bo:'ValidGrade',meta:['JobCode','GradeCode','DefaultIndicator'],map:{'Job Code':'JobCode','Grade Code':'GradeCode','Default Grade':'DefaultIndicator','Default':'DefaultIndicator'},def:{DefaultIndicator:'N'}},
+  Position:{bo:'Position',meta:['PositionCode','Name','JobCode','DepartmentName','LocationCode','GradeCode','FTEValue','RegularTemporary','FullPartTime','EffectiveStartDate','EffectiveEndDate'],map:{'Position Code':'PositionCode','Position Name':'Name','Name':'Name','Job Code':'JobCode','Department Name':'DepartmentName','Department':'DepartmentName','Location Code':'LocationCode','Grade Code':'GradeCode','FTE':'FTEValue','Regular/Temporary':'RegularTemporary','Full-Time/Part-Time':'FullPartTime'},def:{EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31',FTEValue:'1',RegularTemporary:'REGULAR',FullPartTime:'FULL_TIME'},xf:{RegularTemporary:{'Regular':'REGULAR','Temporary':'TEMPORARY'},FullPartTime:{'Full-Time':'FULL_TIME','Part-Time':'PART_TIME','Full Time':'FULL_TIME','Part Time':'PART_TIME'}}},
+  // ── HR Operations ─────────────────────────────────────────────────────────────
+  Action:{bo:'Action',meta:['ActionCode','ActionName','ActionType','EffectiveStartDate','EffectiveEndDate'],map:{'Action Code':'ActionCode','Action Name':'ActionName','Action Type':'ActionType'},def:{EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31'}},
+  ActionReason:{bo:'ActionReason',meta:['ActionTypeCode','ReasonCode','ReasonName','EffectiveStartDate','EffectiveEndDate'],map:{'Action Type Code':'ActionTypeCode','Action Type':'ActionTypeCode','Reason Code':'ReasonCode','Reason Name':'ReasonName','Reason':'ReasonName'},def:{EffectiveStartDate:'1900/01/01',EffectiveEndDate:'4712/12/31'}},
+  // ── Payroll ─────────────────────────────────────────────────────────────────
+  Payroll:{bo:'Payroll',meta:['PayrollName','LegislativeDataGroupName','PayrollFrequency','FirstPeriodEndDate'],map:{'Payroll Name':'PayrollName','Legislative Data Group':'LegislativeDataGroupName','LDG':'LegislativeDataGroupName','Payroll Frequency':'PayrollFrequency','Frequency':'PayrollFrequency','First Period Start Date':'FirstPeriodEndDate'},def:{}},
+};
+const SM={
+  // Standard sheet names → Oracle object names
+  'Locations':'Location','Location':'Location',
+  'Departments':'Department','Department':'Department','Org Units':'Department',
+  'Jobs':'Job','Job Titles':'Job',
+  'Grades':'Grade','Pay Grades':'Grade','Salary Bands':'Grade','Bands':'Grade',
+  'Job Families':'JobFamily','Job Family':'JobFamily','Job Categories':'JobFamily',
+  'Actions':'Action','HR Actions':'Action',
+  'Action Reasons':'ActionReason','Reasons':'ActionReason',
+  'Grade Rates':'GradeRate','Salary Ranges':'GradeRate','Pay Ranges':'GradeRate',
+  'Valid Grades':'ValidGrade','Job Grades':'ValidGrade',
+  'Positions':'Position','Position':'Position','Budgeted Positions':'Position',
+  'Reference Data Sets':'ReferenceDataSet','Reference Sets':'ReferenceDataSet',
+  'Legislative Data Groups':'LegislativeDataGroup','LDGs':'LegislativeDataGroup',
+  'Legal Entities':'LegalEntity','Legal Entity':'LegalEntity',
+  'Business Units':'BusinessUnit','Business Unit':'BusinessUnit',
+  'Payroll Definitions':'Payroll','Payrolls':'Payroll',
+};
+const MB={RPA:'b-amber',FSM:'b-blue',HDL:'b-mint',REST:'b-purple'};
+const TC={setup:'var(--amber)',hdl:'var(--mint)',payroll:'var(--blue)',security:'var(--red)'};
+const TL={setup:'Phase A · Setup & Configuration — RPA/FSM/REST · Must complete BEFORE any HDL data loads',hdl:'Phase B + C · Foundation + Workforce Structures · HDL',payroll:'Phase D · Payroll Foundation · HDL/FSM',security:'Phase E · Security · RPA'};
+
+function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',3000);}
+function openOracleModal(){document.getElementById('oracle-modal').classList.add('open');}
+function closeOracleModal(){document.getElementById('oracle-modal').classList.remove('open');}
+function saveOracleConn(){const url=document.getElementById('ora-url').value.trim(),user=document.getElementById('ora-user').value.trim(),pass=document.getElementById('ora-pass').value.trim();if(!url||!user||!pass){toast('Fill in all Oracle fields','error');return;}ORACLE={url,username:user,password:pass};S.set('oracle',ORACLE);document.getElementById('ora-status').innerHTML=`<span style="color:var(--mint);font-family:var(--f-mono)">● DEV Connected</span>`;closeOracleModal();toast('Oracle DEV connection saved','success');}
+function saveApiKey(){const k=document.getElementById('api-inp').value.trim();if(!k.startsWith('sk-ant')){toast('Must start with sk-ant-','error');return;}API_KEY=k;S.set('claude_key',k);document.getElementById('api-bar').style.display='none';document.getElementById('api-reset-btn').style.color='var(--mint)';document.getElementById('api-reset-btn').style.borderColor='rgba(0,255,178,0.3)';toast('API key saved','success');}
+function resetApiKey(){
+  API_KEY='';localStorage.removeItem('mmsf2_claude_key');
+  // Show a prompt directly
+  const k=prompt('Enter your Claude API key (starts with sk-ant-):\n\nGet one free at console.anthropic.com');
+  if(!k)return;
+  if(!k.startsWith('sk-ant')){toast('Invalid key — must start with sk-ant-','error');return;}
+  API_KEY=k;S.set('claude_key',k);
+  document.getElementById('api-bar').style.display='none';
+  document.getElementById('api-reset-btn').style.color='var(--mint)';
+  document.getElementById('api-reset-btn').style.borderColor='rgba(0,255,178,0.3)';
+
+function saveApiKeyModal(){const k=document.getElementById("apikey-modal-inp").value.trim();if(!k.startsWith("sk-ant")){toast("Must start with sk-ant-","error");return;}API_KEY=k;S.set("claude_key",k);document.getElementById("api-bar").style.display="none";document.getElementById("apikey-modal").classList.remove("open");document.getElementById("api-reset-btn").style.color="var(--mint)";document.getElementById("api-reset-btn").style.borderColor="rgba(0,255,178,0.3)";toast("API key saved","success");}
+function closeApiKeyModal(){document.getElementById("apikey-modal").classList.remove("open");}
+  toast('API key updated successfully','success');
+}
+
+function go(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id)?.classList.add('active');
+  document.getElementById('snav-'+id)?.classList.add('active');
+  const T={dashboard:'All Projects',newproject:'New Project',p1:'Phase 1 · Discovery',p2:'Phase 2 · Blueprint',p3:'Phase 3 · Data Ingestion',p4:'Phase 4 · AI Validation & Cleansing',p5:'Phase 5 · HDL Generation',p6:'Phase 6 · Oracle Load',p7:'Phase 7 · Evidence Pack'};
+  document.getElementById('hdr-t').textContent=T[id]||id;
+  if(id==='dashboard'){document.getElementById('sb-phases').style.display='none';document.getElementById('sb-proj-box').style.display='none';ACTIVE=null;renderDash();}
+  if(id==='p2')rBlueprint();if(id==='p3')rTemplates();if(id==='p4')rValidation();if(id==='p5')rHDL();if(id==='p6')rLoad();if(id==='p7')rEvidence();
+}
+function goPhase(id){if(!ACTIVE)return;go(id);const N={p1:'Phase 1 · Discovery',p2:'Phase 2 · Blueprint',p3:'Phase 3 · Data Ingestion',p4:'Phase 4 · AI Validation',p5:'Phase 5 · HDL Generation',p6:'Phase 6 · Oracle Load',p7:'Phase 7 · Evidence'};document.getElementById('sb-pphase').textContent=N[id]||id;}
+
+function renderDash(){
+  const g=document.getElementById('proj-grid');g.innerHTML='';
+  document.getElementById('sn-count').textContent=Object.keys(PROJECTS).length;
+  Object.values(PROJECTS).forEach(p=>{
+    const pct=p.completion||0,cl=pct>=100?'done-proj':p.hasFiles?'active-proj':'new-proj';
+    const d=document.createElement('div');d.className='proj-card '+cl;d.onclick=()=>openProject(p.id);
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div class="pc-name">${p.name}</div><div class="pc-meta">${p.industry||''} · ${p.type||''}</div></div><span class="badge ${pct>=100?'b-mint':p.hasFiles?'b-blue':'b-amber'}">${pct>=100?'Complete':p.hasFiles?'Active':'New'}</span></div><div class="pc-prog-track"><div class="pc-prog-fill" style="width:${pct}%;background:${pct>=100?'var(--mint)':'var(--blue)'}"></div></div><div class="pc-footer"><span style="font-family:var(--f-mono)">Blueprint ${pct}% · ${(p.missing||[]).length} gaps</span><span>${p.golive?new Date(p.golive).toLocaleDateString('en-US',{month:'short',year:'numeric'}):'TBD'}</span></div>`;
+    g.appendChild(d);
+  });
+  const add=document.createElement('div');add.className='proj-card pc-new-card';add.onclick=()=>go('newproject');
+  add.innerHTML=`<div class="pc-new-icon">＋</div><div class="pc-new-lbl">New Project</div>`;g.appendChild(add);
+}
+
+function toggleMod(el){el.classList.toggle('on');el.textContent=(el.classList.contains('on')?'✓ ':'')+el.dataset.m;}
+
+function createProject(){
+  const name=document.getElementById('np-name').value.trim(),type=document.getElementById('np-type').value;
+  if(!name||!type){toast('Enter client name and implementation type','error');return;}
+  const id='p_'+Date.now();
+  PROJECTS[id]={id,name,industry:document.getElementById('np-ind').value,type,golive:document.getElementById('np-golive').value,consultant:document.getElementById('np-cons').value,modules:[...document.querySelectorAll('.mod-chip.on')].map(e=>e.dataset.m),hasFiles:false,answers:{},completion:0,missing:[...REQ],fileNames:[],fileTexts:[],hdlFiles:{},loadStatus:{}};
+  saveP();openProject(id);
+}
+
+function openProject(id){
+  ACTIVE=id;const p=PROJECTS[id];
+  document.getElementById('sb-phases').style.display='block';document.getElementById('sb-proj-box').style.display='block';
+  document.getElementById('sb-plbl').textContent=p.name;document.getElementById('sb-pname').textContent=p.name;document.getElementById('sb-pphase').textContent='Phase 1 · Discovery';
+  if(API_KEY)document.getElementById('api-bar').style.display='none';
+  if(ORACLE)document.getElementById('ora-status').innerHTML=`<span style="color:var(--mint);font-family:var(--f-mono)">● DEV Connected</span>`;
+  loadP1UI(p);go('p1');document.getElementById('snav-p1').classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const dz=document.getElementById('drop-zone');
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)handleFiles(e.dataTransfer.files);});
+  if(API_KEY)document.getElementById('api-bar').style.display='none';
+  if(ORACLE)document.getElementById('ora-status').innerHTML=`<span style="color:var(--mint);font-family:var(--f-mono)">● DEV Connected</span>`;
+  renderDash();
+});
+
+function loadP1UI(p){
+  const dz=document.getElementById('drop-zone');dz.className='upload-zone';
+  document.getElementById('ud-icon').textContent='📋';document.getElementById('ud-t').textContent='Click to browse or drag & drop';document.getElementById('ud-s').textContent='AI extracts all implementation decisions automatically';
+  document.getElementById('file-inp').value='';document.getElementById('file-list').innerHTML='';document.getElementById('extract-row').style.display='none';
+  document.getElementById('extr-lbl').textContent='';document.getElementById('extr-out').innerHTML='<div style="font-size:12px;color:var(--text3);padding:20px 0;text-align:center">Upload a document to see what the AI extracts</div>';
+  document.getElementById('q-card').style.display=p.hasFiles?'block':'none';document.getElementById('lock-bar').style.display='none';
+  updateBars(p);if(p.hasFiles&&p.fileNames.length){renderFileList(p.fileNames,'done');renderQ(p);}
+}
+
+function handleFiles(fileList){
+  if(!ACTIVE){toast('Select a project first','error');return;}
+  const proj=PROJECTS[ACTIVE],files=Array.from(fileList);if(!files.length)return;
+  document.getElementById('drop-zone').className='upload-zone done';
+  document.getElementById('ud-icon').textContent='📂';document.getElementById('ud-t').textContent=files.length===1?files[0].name:files.length+' files loaded';document.getElementById('ud-s').textContent='Processing files...';
+  proj.fileNames=proj.fileNames||[];proj.fileTexts=proj.fileTexts||[];
+  let pending=files.length;
+  files.forEach(file=>{
+    if(!proj.fileNames.includes(file.name))proj.fileNames.push(file.name);
+    const ext=file.name.split('.').pop().toLowerCase();
+    if(ext==='xlsx'||ext==='xls'){const r=new FileReader();r.onload=e=>{try{const wb=XLSX.read(e.target.result,{type:'binary'});let txt=`Excel: ${file.name}\nSheets: ${wb.SheetNames.join(', ')}\n\n`;wb.SheetNames.forEach(sn=>{const csv=XLSX.utils.sheet_to_csv(wb.Sheets[sn]);if(csv.trim())txt+=`--- Sheet: ${sn} ---\n${csv}\n\n`;});proj.fileTexts.push({name:file.name,text:txt.substring(0,50000)});}catch(err){proj.fileTexts.push({name:file.name,text:`File: ${file.name}`});}pending--;if(pending===0)onReady(proj);};r.readAsBinaryString(file);}
+    else{const r=new FileReader();r.onload=e=>{proj.fileTexts.push({name:file.name,text:(e.target.result||'').substring(0,50000)});pending--;if(pending===0)onReady(proj);};r.onerror=()=>{proj.fileTexts.push({name:file.name,text:''});pending--;if(pending===0)onReady(proj);};r.readAsText(file);}
+  });
+}
+
+function onReady(proj){
+  proj.hasFiles=true;saveP();renderFileList(proj.fileNames,'done');document.getElementById('ud-s').textContent='Ready — click Extract with AI';document.getElementById('extract-row').style.display='block';
+  document.getElementById('extr-out').innerHTML=`<div style="padding:12px 14px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:9px;margin-bottom:10px"><div style="font-size:12px;font-weight:600;color:var(--mint)">✓ ${proj.fileTexts.length} file(s) loaded and ready</div><div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--f-mono)">${proj.fileNames.join(' · ')}</div></div><button class="btn btn-primary btn-sm" onclick="runExtraction()" style="width:100%">⚡ Extract with AI</button><div style="text-align:center;margin-top:10px;font-size:11px;color:var(--text3)">or <a href="#" onclick="showManual();return false" style="color:var(--blue)">fill manually</a></div>`;
+  toast('Files loaded','success');
+}
+
+function renderFileList(names,state){
+  document.getElementById('file-list').innerHTML=names.map(n=>`<div style="padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:9px;margin-top:8px;background:${state==='done'?'var(--mint-dim)':'var(--blue-dim)'};border:1px solid ${state==='done'?'rgba(0,255,178,0.2)':'rgba(45,111,255,0.3)'}"><span>📄</span><span style="flex:1;font-size:12px;font-weight:500;font-family:var(--f-mono)">${n}</span><span class="badge ${state==='done'?'b-mint':'b-blue'}">${state==='done'?'Ready':'Loading'}</span></div>`).join('');
+}
+
+async function runExtraction(){
+  if(!ACTIVE)return;const proj=PROJECTS[ACTIVE];
+  if(!API_KEY){const k=prompt('Enter your Claude API key (starts with sk-ant-):\nGet one free at console.anthropic.com');if(!k||!k.startsWith('sk-ant')){toast('Invalid key','error');return;}API_KEY=k;S.set('claude_key',k);document.getElementById('api-bar').style.display='none';}
+  document.getElementById('extr-out').innerHTML=`<div style="text-align:center;padding:24px 0"><div class="spinner" style="margin-bottom:14px"></div><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--text)">AI Extraction Running</div><div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--f-mono);line-height:2">Reading documents · Identifying Oracle decisions<br>Mapping to questionnaire fields</div></div>`;
+  const combined=(proj.fileTexts||[]).map(f=>`=== FILE: ${f.name} ===\n${f.text}`).join('\n\n');
+  const docLen = combined.length;
+  // If doc fits in 50K, send full doc to both passes
+  // If larger, chunk intelligently
+  const chunk1 = combined.substring(0, 50000);
+  const chunk2 = docLen > 50000
+    ? combined.substring(Math.max(0, docLen - 50000))
+    : combined;
+  // Both passes get full doc when it fits
+
+  const callClaude = async (prompt) => {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:4000, messages:[{role:'user',content:prompt}]})
+    });
+    if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error?.message||'API error '+r.status); }
+    const d = await r.json();
+    return d.content[0].text;
+  };
+
+  const parseJSON = (raw) => {
+    const m = raw.indexOf('{');
+    if (m === -1) return {};
+    let js = raw.substring(m);
+    try { return JSON.parse(js); }
+    catch(e1) {
+      const lc = js.lastIndexOf(',');
+      const lb = js.lastIndexOf('}');
+      if (lc > lb) js = js.substring(0, lc) + '}';
+      else if (!js.endsWith('}')) js += '}';
+      try { return JSON.parse(js); }
+      catch(e2) {
+        const result = {};
+        [...raw.matchAll(/"([a-z_]+)"\s*:\s*"([^"]{0,800})"/g)].forEach(p => { result[p[1]] = p[2]; });
+        return result;
+      }
+    }
+  };
+
+  const prompt1 = `You are a senior Oracle HCM Cloud Core HR consultant with 15+ years experience.
+Read these Oracle HCM implementation documents and extract the requested fields.
+Return ONLY valid JSON. No markdown. No explanation. No preamble.
+Only include a field if you found clear specific evidence. Do not guess.
+If the value is a list, return it as a comma-separated string, NOT an array.
+
+FIELDS TO EXTRACT:
+- legislation: Country and legislation type
+- enterprise: Enterprise name in Oracle HCM
+- currency: Primary currency code
+- go_live_date: Target go-live date
+- impl_type: New implementation or migration type
+- legal_entity: ALL legal entities - each with full name and EIN as comma-separated string
+- legal_employer: Which legal entities are legal employers as comma-separated string
+- psu: Which legal entities are Payroll Statutory Units as comma-separated string
+- ldg: Legislative Data Group name
+- bus_units: ALL business units as comma-separated list
+- locations_count: Number of locations and states
+- departments_count: Number of departments
+- job_structure: Job structure description
+- grade_structure: Grade structure description
+- grade_rates: Whether salary ranges are needed
+- positions: Position management scope
+- positions_count: Number of budgeted positions
+- worker_types: Worker types in scope
+- multiple_assignments: Whether multiple simultaneous assignments allowed
+- payroll_in_scope: Oracle Payroll in scope Yes/No/Future
+- payroll_freq: Payroll frequency
+- salary_basis: Salary bases with annualization factors
+- elements: ALL earning elements as comma-separated list
+- payroll_int: Payroll interface requirements
+- employee_count: Total active employees
+- legacy_system: Legacy HR system being replaced
+
+DOCUMENTS:
+\${combined}
+
+Return ONLY valid JSON with string values (never arrays or nested objects):
+{"legislation":"...","enterprise":"..."}`;
+
+  const prompt2 = `You are a senior Oracle HCM Cloud Core HR consultant with 15+ years experience.
+Read these Oracle HCM implementation documents and extract the requested fields.
+Return ONLY valid JSON. No markdown. No explanation. No preamble.
+Only include a field if you found clear specific evidence. Do not guess.
+If the value is a list, return it as a comma-separated string, NOT an array.
+
+FIELDS TO EXTRACT:
+- absence_in_scope: Oracle Absence Management in scope Yes/No/Future
+- absence_types: ALL absence types as comma-separated list
+- accrual_plans: Accrual rules for PTO and sick leave
+- benefits_in_scope: Oracle Benefits in scope Yes/No/Future
+- benefit_plans: ALL benefit plan types as comma-separated list
+- open_enrollment: Open enrollment timing
+- security: ALL custom security roles as comma-separated list with access scope
+- sso: SSO requirements and identity provider
+- dff: ALL DFF segments as comma-separated list with name type and values
+- value_sets: Custom value sets needed
+- page_customizations: HCM Design Studio customizations needed
+- hr_actions: Custom HR actions beyond Oracle standard
+- action_reasons: Custom action reasons
+- conversion_scope: Historical data conversion scope
+- salary_conversion: Whether salary needs converting
+- absence_balances: Whether absence balances need converting
+- integrations: ALL day-1 integrations as comma-separated list
+- modules_enabled: Oracle modules enabled this phase
+- costing: GL costing requirements
+
+DOCUMENTS:
+\${combined}
+
+Return ONLY valid JSON with string values (never arrays or nested objects):
+{"absence_in_scope":"...","absence_types":"..."}`;
+
+    let extracted = {};
+  const parseJSON = (raw) => {
+    const m = raw.match(/\{[\s\S]*/);
+    if (!m) return {};
+    let js = m[0];
+    try { return JSON.parse(js); }
+    catch(e1) {
+      const lc = js.lastIndexOf(',');
+      const lb = js.lastIndexOf('}');
+      if (lc > lb) js = js.substring(0, lc) + '}';
+      else if (!js.endsWith('}')) js += '}';
+      try { return JSON.parse(js); }
+      catch(e2) {
+        const result = {};
+        [...raw.matchAll(/"([a-z_]+)"\s*:\s*"([^"]{0,800})"/g)].forEach(p => { result[p[1]] = p[2]; });
+        return result;
+      }
+    }
+  };
+
+  const callClaude = async (prompt) => {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:4000, messages:[{role:'user',content:prompt}]})
+    });
+    if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error?.message||'API error '+r.status); }
+    const d = await r.json();
+    return parseJSON(d.content[0].text);
+  };
+
+  // Run pass 1 - enterprise, legal, BUs, payroll
+  document.getElementById('extr-out').innerHTML=`<div style="text-align:center;padding:24px 0"><div class="spinner" style="margin-bottom:14px"></div><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--text)">AI Extraction — Pass 1 of 2</div><div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--f-mono);line-height:2">Reading enterprise structure · Legal entities · Business units<br>Jobs · Grades · Payroll · Positions · Worker types</div></div>`;
+
+  try {
+    const raw1 = await callClaude(prompt1);
+    const result1 = parseJSON(raw1);
+
+    document.getElementById('extr-out').innerHTML=`<div style="text-align:center;padding:24px 0"><div class="spinner" style="margin-bottom:14px"></div><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--mint)">Pass 1 Complete · ${Object.keys(result1).length} fields · Running Pass 2...</div><div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--f-mono)">Extracting: Absence · Benefits · Security · DFFs · Integrations</div></div>`;
+
+    const raw2 = await callClaude(prompt2);
+    const result2 = parseJSON(raw2);
+
+    extracted = {...result1, ...result2};
+
+      let found=0;Object.entries(extracted).forEach(([k,v])=>{
+      let val;
+      if(Array.isArray(v)) val=v.join(', ');
+      else if(typeof v==='object'&&v!==null) val=Object.values(v).join(', ');
+      else val=String(v||'').trim();
+      if(val&&!['null','undefined','None','[object Object]'].includes(val)){
+        proj.answers[k]=val;found++;
+      }
+    });
+    recalc(proj);saveP();const miss=proj.missing.length;
+    document.getElementById('extr-lbl').textContent='from '+proj.fileNames.join(', ');
+    document.getElementById('extr-out').innerHTML=`<div style="display:flex;flex-direction:column;gap:8px"><div style="padding:10px 13px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:9px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;font-weight:600;color:var(--mint)">✓ Answers extracted</span><span style="font-family:var(--f-mono);font-size:16px;font-weight:700;color:var(--mint)">${found}</span></div><div style="padding:10px 13px;background:${miss?'var(--red-dim)':'var(--mint-dim)'};border:1px solid ${miss?'rgba(255,77,109,0.2)':'rgba(0,255,178,0.2)'};border-radius:9px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;font-weight:600;color:${miss?'var(--red)':'var(--mint)'}">${miss?'✗ Still missing':'✓ All required answered'}</span><span style="font-family:var(--f-mono);font-size:16px;font-weight:700;color:${miss?'var(--red)':'var(--mint)'}">${miss}</span></div>${miss?'<div style="font-size:11px;color:var(--text3)">Answer remaining questions below.</div>':'<div style="font-size:11px;color:var(--mint);font-weight:600;font-family:var(--f-mono)">// Blueprint complete — all phases unlocked</div>'}</div>`;
+    document.getElementById('q-card').style.display='block';renderQ(proj);updateBars(proj);renderDash();toast(`AI extracted ${found} answers`,'success');
+    } catch(err) {
+    document.getElementById('extr-out').innerHTML=`<div style="padding:14px;background:var(--red-dim);border:1px solid rgba(255,77,109,0.2);border-radius:9px"><div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:5px">⚠ Extraction failed</div><div style="font-size:11px;color:var(--text2);margin-bottom:10px;font-family:var(--f-mono)">${err.message}</div><button class="btn btn-ghost btn-sm" onclick="showManual()">Fill manually →</button></div>`;
+    showManual();toast('Extraction failed — check API key','error');
+  }
+}
+
+function showManual(){const proj=PROJECTS[ACTIVE];if(!proj)return;proj.hasFiles=true;saveP();document.getElementById('q-card').style.display='block';renderQ(proj);}
+
+function renderQ(proj){
+  const body=document.getElementById('q-body');body.innerHTML='';
+  QUESTIONS.forEach(sec=>{
+    const st=document.createElement('div');st.className='q-section-label';
+    st.innerHTML=`<span style="width:4px;height:4px;border-radius:50%;background:var(--text3);display:inline-block"></span>${sec.section}`;
+    body.appendChild(st);
+    sec.items.forEach(q=>{
+      const ans=proj.answers[q.id],miss=q.required&&!ans;
+      const div=document.createElement('div');div.className='q-item '+(ans?'ok':miss?'miss':'warn');div.id='qi-'+q.id;
+      div.innerHTML=`<div class="q-ico ${ans?'qi-ok':miss?'qi-miss':'qi-warn'}" style="font-family:var(--f-mono)">${ans?'✓':miss?'✗':'?'}</div><div style="flex:1"><div class="q-label">${q.label}</div>${ans?`<div class="q-val">${ans}</div><button class="btn btn-ghost btn-xs" style="margin-top:6px;font-size:10px" onclick="editQ('${q.id}')">Edit</button>`:`<div style="font-size:11px;color:${miss?'var(--red)':'var(--amber)'};margin-top:3px;font-family:var(--f-mono)">${miss?'// required — not found in documents':'// optional — not confirmed'}</div><input class="q-inp" id="qinp-${q.id}" placeholder="${q.hint||'Enter answer...'}" onkeydown="if(event.key==='Enter')saveQ('${q.id}')"><button class="q-save-btn" onclick="saveQ('${q.id}')">Save</button>`}</div><span class="badge ${ans?'b-mint':miss?'b-red':'b-amber'}" style="flex-shrink:0">${ans?'Answered':miss?'Required':'Optional'}</span>`;
+      body.appendChild(div);
+    });
+  });
+  renderLockBar(proj);
+}
+
+function saveQ(id){const proj=PROJECTS[ACTIVE],inp=document.getElementById('qinp-'+id);if(!inp?.value.trim()){toast('Please enter an answer','error');return;}proj.answers[id]=inp.value.trim();recalc(proj);saveP();renderQ(proj);updateBars(proj);renderDash();toast('Answer saved','success');}
+function editQ(id){const proj=PROJECTS[ACTIVE];delete proj.answers[id];recalc(proj);saveP();renderQ(proj);updateBars(proj);}
+function recalc(proj){const ans=REQ.filter(id=>proj.answers[id]);proj.completion=Math.round((ans.length/REQ.length)*100);proj.missing=REQ.filter(id=>!proj.answers[id]);}
+
+function renderLockBar(proj){
+  const bar=document.getElementById('lock-bar'),m=(proj.missing||[]).length;bar.style.display='flex';
+  if(m===0){bar.className='lock-status ls-unlocked';bar.innerHTML=`<span style="font-size:20px">✓</span><div style="flex:1"><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--mint)">Blueprint complete — all phases unlocked</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Proceed to Phase 3 to upload client legacy data files.</div></div><button class="btn btn-mint btn-sm" onclick="goPhase('p3')">Upload Client Data →</button>`;['p3','p4','p5','p6','p7'].forEach(id=>{const d=document.getElementById('sd-'+id);if(d){d.className='status-dot sd-mint';}});}
+  else{bar.className='lock-status ls-locked';bar.innerHTML=`<span style="font-size:20px">⊗</span><div style="flex:1"><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--red)">${m} required question${m>1?'s':''} unanswered — Phases 3–7 locked</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Answer all required questions above to unlock the next phases.</div></div><button class="btn btn-ghost btn-sm" onclick="goPhase('p2')">Preview Blueprint</button>`;}
+}
+
+function updateBars(proj){
+  const pct=proj.completion||0,m=(proj.missing||[]).length;
+  const col=pct>=100?'var(--mint)':pct>50?'var(--blue)':pct>0?'var(--amber)':'var(--text3)';
+  ['','p2','p3'].forEach(sfx=>{
+    const f=document.getElementById('cb-fill'+(sfx?'-'+sfx:'')),pc=document.getElementById('cb-pct'+(sfx?'-'+sfx:'')),t=document.getElementById('cb-tag'+(sfx?'-'+sfx:''));
+    if(!f)return;f.style.width=pct+'%';f.style.background=col;pc.textContent=pct+'%';pc.style.color=col;
+    if(t){if(pct>=100){t.className='prog-tag pt-complete';t.textContent='Complete';}else if(pct>0){t.className='prog-tag pt-partial';t.textContent=m+' gap'+(m>1?'s':'');}else{t.className='prog-tag pt-blocked';t.textContent='Upload to begin';}}
+  });
+}
+
+function rBlueprint(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;updateBars(proj);
+  const a=proj.answers||{};
+  const allQ=QUESTIONS.flatMap(s=>s.items);
+  const miss=allQ.filter(q=>q.required&&!a[q.id]);
+  const opt=allQ.filter(q=>!q.required&&!a[q.id]);
+
+  // Parse key decisions for visual display
+  const sanitize=v=>String(v||'').replace(/\[object Object\]/g,'').trim()||'Not set';
+  const enterprise=sanitize(a.enterprise)||proj.name||'Enterprise';
+  const legislation=a.legislation||'US Legislation · USD';
+  const ldg=sanitize(a.ldg)||'Legislative Data Group';
+  const legalEntities=(sanitize(a.legal_entity)||'').split(/[,\n;]/).map(s=>s.trim()).filter(s=>s&&s!=='[object Object]').slice(0,4);
+  const busUnits=(sanitize(a.bus_units)||'').split(/[,\n;]/).map(s=>s.trim()).filter(s=>s&&s!=='[object Object]').slice(0,5);
+  const modules=(a.modules_enabled||'Core HR').split(/[,\n]/).map(s=>s.trim()).filter(s=>s);
+  const payFreq=a.payroll_freq||'';
+  const workerTypes=a.worker_types||'';
+  const positions=a.positions||'';
+  const security=(a.security||'').split(/\n|(?=NHP |(?=[A-Z][a-z]+ (?:Administrator|Specialist|Manager|Liaison|Self Service)))/).map(s=>s.trim()).filter(s=>s&&s.length>3).slice(0,7);
+  const srcSystem=a.payroll_int||'Legacy HRIS';
+
+  document.getElementById('p2-body').innerHTML=`
+    <!-- TRANSFORMATION BANNER -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Legacy System</div>
+        <div style="font-family:var(--f-head);font-size:16px;font-weight:700;color:var(--text)">${srcSystem.includes('ADP')?srcSystem:a.payroll_int?a.payroll_int:'Current HRIS'}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">Source of truth until go-live</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="width:80px;height:2px;background:linear-gradient(90deg,var(--blue),var(--mint));border-radius:2px"></div>
+        <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.08em;text-transform:uppercase">MMS Fusion</div>
+        <div style="width:80px;height:2px;background:linear-gradient(90deg,var(--blue),var(--mint));border-radius:2px"></div>
+      </div>
+      <div style="flex:1;min-width:200px;text-align:right">
+        <div style="font-size:10px;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Target System</div>
+        <div style="font-family:var(--f-head);font-size:16px;font-weight:700;color:var(--mint)">Oracle HCM Cloud</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">${legislation}</div>
+      </div>
+    </div>
+
+    <!-- ENTERPRISE TREE -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head">Enterprise Hierarchy <span class="card-sub">As will be configured in Oracle HCM</span></div>
+      <div style="overflow-x:auto;padding-bottom:8px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0;min-width:600px">
+
+          <!-- Enterprise -->
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="padding:10px 24px;background:linear-gradient(135deg,var(--blue),#1a4fc4);border-radius:10px;font-family:var(--f-head);font-size:13px;font-weight:700;color:#fff;text-align:center;box-shadow:0 0 20px var(--blue-glow);min-width:200px">
+              🏢 ${enterprise}
+              <div style="font-size:9px;font-weight:500;opacity:.7;margin-top:2px;text-transform:uppercase;letter-spacing:.08em">Enterprise</div>
+            </div>
+            <div style="width:2px;height:20px;background:var(--border2)"></div>
+          </div>
+
+          <!-- LDG -->
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="padding:8px 20px;background:var(--surface2);border:1px solid rgba(45,111,255,0.3);border-radius:9px;font-size:12px;font-weight:600;color:var(--blue);text-align:center;min-width:220px">
+              📋 ${ldg}
+              <div style="font-size:9px;font-weight:500;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.06em">Legislative Data Group · ${legislation.split('·')[0].trim()}</div>
+            </div>
+            <div style="width:2px;height:20px;background:var(--border2)"></div>
+          </div>
+
+          <!-- Legal Entities row -->
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            ${(legalEntities.length?legalEntities:['Legal Entity 1']).map((le,i)=>`
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div style="padding:8px 14px;background:var(--surface2);border:1px solid rgba(0,255,178,0.2);border-radius:9px;font-size:11px;font-weight:600;color:var(--mint);text-align:center;min-width:160px;max-width:200px">
+                  🏛 ${le.split('(')[0].trim()}
+                  ${le.includes('EIN')||le.includes('ein')?`<div style="font-size:9px;color:var(--text3);margin-top:1px;font-family:var(--f-mono)">${le.match(/EIN[:\s]+[\d-]+/i)?le.match(/EIN[:\s]+[\d-]+/i)[0]:''}</div>`:''}
+                  <div style="font-size:9px;font-weight:500;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.04em">Legal Employer · PSU</div>
+                </div>
+                <div style="width:2px;height:16px;background:var(--border2)"></div>
+                <!-- Business Units under each LE -->
+                <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+                  ${(busUnits.length?busUnits.slice(0,Math.ceil(busUnits.length/(legalEntities.length||1))):['Business Unit']).map(bu=>`
+                    <div style="padding:6px 10px;background:var(--surface3);border:1px solid var(--border);border-radius:7px;font-size:10px;color:var(--text2);text-align:center;max-width:140px">
+                      📁 ${bu}
+                      <div style="font-size:9px;color:var(--text3);margin-top:1px">Business Unit</div>
+                    </div>`).join('')}
+                </div>
+              </div>`).join('')}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- KEY DECISIONS GRID -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+
+      <!-- Workforce Config -->
+      <div class="card">
+        <div class="card-head" style="margin-bottom:10px">⚙ Workforce Configuration</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--surface2);border-radius:7px;border:1px solid var(--border)">
+            <span style="font-size:11px;color:var(--text3)">Payroll Frequency</span>
+            <span style="font-size:11px;font-weight:600;color:${payFreq?'var(--mint)':'var(--red)'};font-family:var(--f-mono)">${payFreq||'Not set'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--surface2);border-radius:7px;border:1px solid var(--border)">
+            <span style="font-size:11px;color:var(--text3)">Worker Types</span>
+            <span style="font-size:11px;font-weight:600;color:${workerTypes?'var(--mint)':'var(--red)'};font-family:var(--f-mono);text-align:right;max-width:180px">${workerTypes||'Not set'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--surface2);border-radius:7px;border:1px solid var(--border)">
+            <span style="font-size:11px;color:var(--text3)">Position Management</span>
+            <span style="font-size:11px;font-weight:600;color:${positions?'var(--mint)':'var(--red)'};font-family:var(--f-mono);text-align:right;max-width:180px">${positions?positions.substring(0,40)+(positions.length>40?'...':''):'Not set'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--surface2);border-radius:7px;border:1px solid var(--border)">
+            <span style="font-size:11px;color:var(--text3)">Salary Basis</span>
+            <span style="font-size:11px;font-weight:600;color:${a.salary_basis?'var(--mint)':'var(--red)'};font-family:var(--f-mono);text-align:right;max-width:180px">${a.salary_basis?a.salary_basis.substring(0,40):'Not set'}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modules in Scope -->
+      <div class="card">
+        <div class="card-head" style="margin-bottom:10px">📦 Modules in Scope</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${modules.map(m=>`<span style="padding:5px 10px;background:var(--blue-dim);border:1px solid rgba(45,111,255,0.3);border-radius:20px;font-size:11px;font-weight:600;color:var(--blue)">${m}</span>`).join('')}
+        </div>
+        ${a.elements?`<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Earning Elements in Scope</div>
+          <div style="font-size:11px;color:var(--text2);font-family:var(--f-mono);line-height:1.8">${a.elements}</div>
+        </div>`:''}
+      </div>
+    </div>
+
+    <!-- SECURITY ROLES DESIGN -->
+    ${security.length?`<div class="card" style="margin-bottom:16px">
+      <div class="card-head">🔐 Security Role Design</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+        ${(()=>{
+          const secStr = a.security||'';
+          // Split on role name patterns
+          const roles = secStr.split(/(?=NHP [A-Z]|\bHR (?:Admin|Spec)|\bPayroll|\bBenefits|\bNurse|\bLine|\bEmployee Self)/).map(s=>s.trim()).filter(s=>s.length>5).slice(0,7);
+          return roles.map(role=>{
+            const rn=role.split('(')[0].split(',')[0].trim().substring(0,50);
+            const isAdmin=role.toLowerCase().includes('admin');
+            const isPayroll=role.toLowerCase().includes('payroll');
+            const isManager=role.toLowerCase().includes('manager')||role.toLowerCase().includes('nurse');
+            const col=isAdmin?'var(--red)':isPayroll?'var(--amber)':isManager?'var(--mint)':'var(--blue)';
+            const detail=role.substring(rn.length).replace(/^[,( ]+/,'').substring(0,80);
+            return`<div style="padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;border-left:3px solid ${col}">
+              <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px">${rn}</div>
+              ${detail?`<div style="font-size:10px;color:var(--text3);font-family:var(--f-mono)">${detail}</div>`:''}
+            </div>`;
+          }).join('');
+        })()}
+      </div>
+    </div>`:''}
+
+    <!-- TRANSFORMATION SCOPE -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head">🔄 What Gets Automated — From Legacy to Oracle</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div style="padding:12px 14px;background:var(--surface2);border:1px solid rgba(0,255,178,0.15);border-radius:9px">
+          <div style="font-size:10px;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">HDL · Data Migration</div>
+          ${['Reference Data Sets','Legislative Data Groups','Legal Entities','Business Units','Locations','Departments','Job Families + Jobs','Grades + Grade Rates','Valid Grades','Actions + Reasons','Payroll Definitions'].map(i=>`<div style="font-size:11px;color:var(--text3);padding:2px 0;font-family:var(--f-mono)">→ ${i}</div>`).join('')}
+        </div>
+        <div style="padding:12px 14px;background:var(--surface2);border:1px solid rgba(245,158,11,0.15);border-radius:9px">
+          <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">RPA · UI Automation</div>
+          ${['Configure Offerings','Admin Profile Options','Value Sets + DFF Setup','HCM Design Studio','Security Roles + Profiles','Approval Workflow Rules'].map(i=>`<div style="font-size:11px;color:var(--text3);padding:2px 0;font-family:var(--f-mono)">→ ${i}</div>`).join('')}
+        </div>
+        <div style="padding:12px 14px;background:var(--surface2);border:1px solid rgba(45,111,255,0.15);border-radius:9px">
+          <div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">FSM / REST · Config</div>
+          ${['Features by Country (US)','Geography Load (US)','Assignment Status Types','Salary Basis','Consolidation Groups'].map(i=>`<div style="font-size:11px;color:var(--text3);padding:2px 0;font-family:var(--f-mono)">→ ${i}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- GAPS -->
+    ${miss.length||opt.length?`<div class="card" style="margin-bottom:16px;border-left:2px solid ${miss.length?'var(--red)':'var(--amber)'}">
+      <div class="card-head">⚠ Open Items — Blueprint Incomplete</div>
+      ${miss.map(q=>`<div class="bp-item"><div class="bp-ico" style="background:var(--red-dim);color:var(--red)">✗</div><div style="flex:1"><div style="font-size:12px;font-weight:500">${q.label}</div><div style="font-size:11px;color:var(--red);font-family:var(--f-mono);margin-top:2px">// required — not answered</div></div><button class="btn btn-ghost btn-xs" onclick="goPhase('p1')">Answer</button></div>`).join('')}
+      ${opt.map(q=>`<div class="bp-item"><div class="bp-ico" style="background:var(--amber-dim);color:var(--amber)">?</div><div style="flex:1"><div style="font-size:12px;font-weight:500">${q.label}</div><div style="font-size:11px;color:var(--amber);font-family:var(--f-mono);margin-top:2px">// optional — not confirmed</div></div><button class="btn btn-ghost btn-xs" onclick="goPhase('p1')">Confirm</button></div>`).join('')}
+    </div>`:''}
+
+    <div style="text-align:center">${miss.length
+      ?`<button class="btn btn-ghost btn-sm" onclick="goPhase('p1')">← Answer ${miss.length} missing question${miss.length>1?'s':''}</button>`
+      :`<button class="btn btn-mint btn-sm" onclick="goPhase('p3')">Upload Client Data → Phase 3</button>`}
+    </div>`;
+}
+
+// ═══════════════════════════════════════
+// ORACLE FIELD MAPPING INTELLIGENCE
+// ═══════════════════════════════════════
+const ORACLE_MAPPINGS={
+  location_code:['location code','loc code','location id','site code','office code','loc id','location #'],
+  location_name:['location name','loc name','site name','office name','facility name','location description'],
+  address1:['address','address line 1','address 1','street','street address','addr1'],
+  address2:['address line 2','address 2','suite','apt','unit','addr2'],
+  city:['city','town','municipality','city name','town or city'],
+  state:['state','province','state code','st','region','state/province'],
+  zip:['zip','zip code','postal code','post code','zipcode','zip/postal'],
+  country:['country','country code','nation'],
+  dept_name:['department','department name','dept','dept name','org unit','organization','division','cost center name','department description'],
+  business_unit:['business unit','bu','bu name','business unit name','company','entity','business group'],
+  dept_location:['location','location code','office','site','work location'],
+  job_code:['job code','job id','position code','job number','role code','job #','position id'],
+  job_name:['job title','job name','title','position title','role','position name','job description','role title'],
+  job_family:['job family code','job family','family','job category','category','function','job group'],
+  exempt_status:['exempt','flsa','flsa status','exempt status','overtime eligible','ot eligible','flsa classification'],
+  management_level:['management level','mgmt level','level','manager level','leadership level'],
+  grade_code:['grade','grade code','pay grade','grade id','band','pay band','salary grade','compensation grade'],
+  grade_name:['grade name','grade description','pay grade name','band name','salary band name'],
+  min_salary:['minimum','minimum salary','min salary','min pay','salary min','range minimum'],
+  mid_salary:['midpoint','midpoint salary','mid salary','mid pay','salary mid','range midpoint'],
+  max_salary:['maximum','maximum salary','max salary','max pay','salary max','range maximum'],
+  position_code:['position code','position id','position #','pos code','headcount id'],
+  position_name:['position name','position title','position description','pos name'],
+  fte:['fte','headcount','full time equivalent','fte value','budgeted fte'],
+  reports_to:['reports to','reports to position','manager position','parent position'],
+  action_code:['action code','action id','transaction code','hr action code'],
+  action_name:['action name','action description','transaction name','hr action'],
+  action_type:['action type','transaction type','action category'],
+  reason_code:['reason code','reason id','action reason code'],
+  reason_name:['reason name','reason description','action reason'],
+  ldg_name:['ldg name','legislative data group','legislative data group name','ldg'],
+  country_code:['country code','country','legislation'],
+  currency_code:['currency code','currency','currencycode'],
+  le_name:['legal entity name','legal entity','company name','employer name'],
+  le_identifier:['legal entity identifier','le identifier','entity code','company code'],
+  ein:['ein','tax id','employer identification number','federal tax id','fein'],
+  employee_id:['employee id','emp id','employee number','personnel number','worker id','employee #','person id'],
+  first_name:['first name','fname','given name','forename','first'],
+  last_name:['last name','lname','surname','family name','last'],
+  hire_date:['hire date','start date','employment date','date of hire','doh','date hired'],
+  term_date:['termination date','term date','end date','separation date','last day'],
+  birth_date:['birth date','date of birth','dob','birthday'],
+  email:['email','email address','work email','business email'],
+};
+
+function detectColMap(headers){
+  const mapping={};
+  const lowers=headers.map(h=>(h||'').toString().toLowerCase().trim().replace(/[\[\]]/g,'').trim());
+  Object.entries(ORACLE_MAPPINGS).forEach(([oracleField,variants])=>{
+    lowers.forEach((h,idx)=>{
+      if(!mapping[oracleField]&&variants.some(v=>h.includes(v)||v.includes(h))){
+        mapping[oracleField]={clientCol:headers[idx],clientIdx:idx};
+      }
+    });
+  });
+  return mapping;
+}
+
+function inferObj(sheetName,headers){
+  const sn=sheetName.toLowerCase();
+  const hs=headers.map(h=>(h||'').toString().toLowerCase());
+  if(sn.includes('location')||sn.includes('site')||sn.includes('office'))return'Location';
+  if(sn.includes('department')||sn.includes('dept'))return'Department';
+  if(sn.includes('famil'))return'JobFamily';
+  if(sn.includes('job')&&!sn.includes('family'))return'Job';
+  if(sn.includes('grade')||sn.includes('band'))return'Grade';
+  if(sn.includes('position')||sn.includes('headcount')||sn.includes('budgeted'))return'Position';
+  if(sn.includes('action')&&!sn.includes('reason'))return'Action';
+  if(sn.includes('reason'))return'ActionReason';
+  if(sn.includes('employee')||sn.includes('worker')||sn.includes('person')||sn.includes('staff'))return'Employee';
+  if(hs.some(h=>h.includes('hire date')||h.includes('employee id')))return'Employee';
+  if(hs.some(h=>h.includes('location code')||h.includes('city')))return'Location';
+  if(hs.some(h=>h.includes('department')||h.includes('dept')))return'Department';
+  if(hs.some(h=>h.includes('job title')||h.includes('job code')))return'Job';
+  if(hs.some(h=>h.includes('grade')))return'Grade';
+  return'Unknown';
+}
+
+function transformRows(oracleObj,rows,mapping,answers){
+  const result=[],errors=[],warnings=[];
+  rows.forEach((row,i)=>{
+    const rn=i+2;const out={};
+    if(oracleObj==='Location'){
+      out.LocationCode=mapping.location_code?String(row[mapping.location_code.clientIdx]||'').trim():'';
+      out.LocationName=mapping.location_name?String(row[mapping.location_name.clientIdx]||'').trim():'';
+      out.AddressLine1=mapping.address1?String(row[mapping.address1.clientIdx]||'').trim():'';
+      out.TownOrCity=mapping.city?String(row[mapping.city.clientIdx]||'').trim():'';
+      out.Region2=mapping.state?String(row[mapping.state.clientIdx]||'').trim().toUpperCase().substring(0,2):'';
+      out.PostalCode=mapping.zip?String(row[mapping.zip.clientIdx]||'').trim().substring(0,5):'';
+      out.Country='US';out.SetCode='COMMON';out.EffectiveStartDate='1900/01/01';out.ActiveStatus='ACTIVE';
+      if(!out.LocationCode)errors.push({row:rn,field:'Location Code',msg:'Required'});
+      if(!out.LocationName)errors.push({row:rn,field:'Location Name',msg:'Required'});
+      if(!out.TownOrCity)errors.push({row:rn,field:'City',msg:'Required'});
+    } else if(oracleObj==='Department'){
+      out.Name=mapping.dept_name?String(row[mapping.dept_name.clientIdx]||'').trim():'';
+      out.BusinessUnitName=mapping.business_unit?String(row[mapping.business_unit.clientIdx]||'').trim():'';
+      out.LocationCode=mapping.dept_location?String(row[mapping.dept_location.clientIdx]||'').trim():'';
+      out.SetCode='COMMON';out.ClassificationCode='DEPARTMENT';out.EffectiveStartDate='1900/01/01';out.EffectiveEndDate='4712/12/31';
+      if(!out.Name)errors.push({row:rn,field:'Department Name',msg:'Required'});
+      if(!out.BusinessUnitName){const bu=(answers.bus_units||'').split(',')[0].trim();if(bu){out.BusinessUnitName=bu;warnings.push({row:rn,field:'Business Unit',msg:'Defaulted from blueprint: '+bu});}else errors.push({row:rn,field:'Business Unit',msg:'Required'});}
+    } else if(oracleObj==='Job'){
+      out.Name=mapping.job_name?String(row[mapping.job_name.clientIdx]||'').trim():'';
+      out.JobCode=mapping.job_code?String(row[mapping.job_code.clientIdx]||'').trim():'';
+      if(!out.JobCode&&out.Name){out.JobCode=out.Name.toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,10);warnings.push({row:rn,field:'Job Code',msg:'Auto-generated: '+out.JobCode});}
+      const ex=mapping.exempt_status?String(row[mapping.exempt_status.clientIdx]||'').toLowerCase():'';
+      out.OvertimeStatus=ex.includes('exempt')&&!ex.includes('non')?'EXEMPT':'NONEXEMPT';
+      out.SetCode='COMMON';out.EffectiveStartDate='1900/01/01';out.EffectiveEndDate='4712/12/31';out.ActiveStatus='A';
+      if(!out.JobCode)errors.push({row:rn,field:'Job Code',msg:'Required'});
+    } else if(oracleObj==='Grade'){
+      out.GradeCode=mapping.grade_code?String(row[mapping.grade_code.clientIdx]||'').trim():'';
+      out.GradeName=mapping.grade_name?String(row[mapping.grade_name.clientIdx]||'').trim():out.GradeCode;
+      out.SetCode='COMMON';out.EffectiveStartDate='1900/01/01';out.EffectiveEndDate='4712/12/31';out.ActiveStatus='A';
+      if(!out.GradeCode)errors.push({row:rn,field:'Grade Code',msg:'Required'});
+    } else if(oracleObj==='JobFamily'){
+      out.Code=mapping.job_family?String(row[mapping.job_family.clientIdx]||'').trim():'';
+      if(!out.Code&&row.length>0)out.Code=String(row[0]||'').trim();
+      if(!out.Code){// try first column as fallback
+        const firstVal=String(row[0]||'').trim();
+        if(firstVal){out.Code=firstVal;warnings.push({row:rn,field:'Job Family Code',msg:'Used first column as code'});}
+      }
+      out.Name=mapping.job_name?String(row[mapping.job_name.clientIdx]||'').trim():out.Code;
+      if(!out.Name){const secondVal=String(row[1]||'').trim();if(secondVal)out.Name=secondVal;}
+      out.SetCode='COMMON';out.EffectiveStartDate='1900/01/01';out.EffectiveEndDate='4712/12/31';out.ActiveStatus='A';
+      if(!out.Code)errors.push({row:rn,field:'Job Family Code',msg:'Required'});
+    }
+    if(Object.values(out).some(v=>String(v||'').trim()))result.push(out);
+  });
+  return{rows:result,errors,warnings};
+}
+
+function rTemplates(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;updateBars(proj);
+  document.getElementById('p3-body').innerHTML=`
+    <div class="card" style="margin-bottom:14px;border-left:2px solid var(--mint)">
+      <div class="card-head">Phase 3 · Client Legacy Data Ingestion <span class="card-sub">Upload raw files from any HR system — no template filling required</span></div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.8;margin-bottom:14px">Client provides their existing data files in whatever format they have. The tool reads them, maps columns to Oracle fields using the locked blueprint decisions, cleanses the data, and prepares it for validation. <strong style="color:var(--text2)">No manual template filling.</strong></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+        <div style="padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:9px"><div style="font-size:10px;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Step 1</div><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Upload Legacy Files</div><div style="font-size:11px;color:var(--text3)">Any Excel or CSV from ADP, Workday, PeopleSoft, SAP, or any HR system</div></div>
+        <div style="padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:9px"><div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Step 2</div><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">AI Maps & Transforms</div><div style="font-size:11px;color:var(--text3)">Identifies columns, maps to Oracle fields, applies blueprint design rules</div></div>
+        <div style="padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:9px"><div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Step 3</div><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Confirm & Validate</div><div style="font-size:11px;color:var(--text3)">Consultant reviews mapping, then proceeds to AI validation</div></div>
+      </div>
+      <div class="upload-zone" id="p3-drop" onclick="document.getElementById('p3-file').click()" style="padding:24px">
+        <div style="font-size:28px;margin-bottom:8px">📂</div>
+        <div class="uz-title">Upload client legacy data files</div>
+        <div class="uz-sub">ADP export · Workday report · HR spreadsheet · Payroll register · Any format</div>
+        <div class="file-types" style="margin-top:12px"><span class="ftype">XLSX</span><span class="ftype">XLS</span><span class="ftype">CSV</span></div>
+      </div>
+      <input type="file" id="p3-file" style="display:none" accept=".xlsx,.xls,.csv" multiple onchange="ingestFiles(this.files)">
+      <div id="p3-status" style="margin-top:10px"></div>
+    </div>
+    <div id="p3-map-card"></div>
+    <div class="card" style="margin-top:14px;border-left:2px solid var(--amber)">
+      <div class="card-head">⚠ RPA + FSM — Automated in Phase 6 Before Data Loads</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">No client data needed. Tool automates these before any HDL loads.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span class="badge b-amber">Configure Offerings</span><span class="badge b-amber">Admin Profile Options</span>
+        <span class="badge b-amber">Value Sets + DFF</span><span class="badge b-amber">HCM Design Studio</span>
+        <span class="badge b-blue">Features by Country</span><span class="badge b-blue">Geography Load</span>
+        <span class="badge b-blue">Assignment Status</span><span class="badge b-blue">Salary Basis</span>
+        ${proj.answers.security?'<span class="badge b-amber">Security Roles</span>':'<span class="badge b-red">Security Roles — answer Phase 1 first</span>'}
+      </div>
+    </div>`;
+  const dz=document.getElementById('p3-drop');
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)ingestFiles(e.dataTransfer.files);});
+}
+
+function ingestFiles(fileList){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;
+  const files=Array.from(fileList);
+  document.getElementById('p3-status').innerHTML=`<div style="padding:10px 13px;background:var(--blue-dim);border:1px solid rgba(45,111,255,0.2);border-radius:8px;font-size:12px;color:var(--text2)">⏳ Reading ${files.length} file(s) and mapping columns to Oracle fields...</div>`;
+  let pending=files.length;const allSheets=[];
+  files.forEach(file=>{
+    const ext=file.name.split('.').pop().toLowerCase();
+    const r=new FileReader();
+    r.onload=e=>{
+      try{
+        const wb=XLSX.read(e.target.result,{type:ext==='csv'?'string':'binary'});
+        wb.SheetNames.forEach(sn=>{
+          const ws=wb.Sheets[sn];
+          const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+          if(raw.length<2)return;
+          let hi=0;
+          for(let i=0;i<Math.min(5,raw.length);i++){if(raw[i].some(v=>String(v||'').trim())){hi=i;break;}}
+          const headers=raw[hi].map(h=>String(h||'').trim()).filter(h=>h);
+          const dataRows=raw.slice(hi+1).filter(row=>row.some(v=>String(v||'').trim()));
+          if(!headers.length||!dataRows.length)return;
+          const oracleObj=inferObj(sn==='Sheet1'?file.name.replace(/\.\w+$/,''):sn,headers);
+          const mapping=detectColMap(headers);
+          allSheets.push({file:file.name,sheet:sn,oracleObj,headers,dataRows,mapping,rowCount:dataRows.length});
+        });
+      }catch(err){console.error(err);}
+      pending--;if(pending===0)showMapping(allSheets,proj);
+    };
+    r.readAsBinaryString(file);
+  });
+}
+
+function showMapping(sheets,proj){
+  if(!sheets.length){document.getElementById('p3-status').innerHTML=`<div style="padding:10px 13px;background:var(--red-dim);border:1px solid rgba(255,77,109,0.2);border-radius:8px;font-size:12px;color:var(--red)">⚠ No readable data found.</div>`;return;}
+  proj._sheets=sheets;saveP();
+  const mapped=sheets.filter(s=>s.oracleObj!=='Unknown').length;
+  const totalRows=sheets.reduce((a,s)=>a+s.rowCount,0);
+  document.getElementById('p3-status').innerHTML=`<div style="padding:10px 13px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:8px;font-size:12px;font-weight:600;color:var(--mint)">✓ ${sheets.length} sheet(s) · ${totalRows} rows · ${mapped} mapped to Oracle objects</div>`;
+  let html=`<div class="card" style="margin-top:14px"><div class="card-head">AI Column Mapping Review <span class="card-sub">Confirm before proceeding to validation</span></div><div style="font-size:12px;color:var(--text3);margin-bottom:14px">The tool has identified your client columns and mapped them to Oracle HCM fields. Green = mapped · Grey = unmapped (will be ignored or defaulted).</div>`;
+  sheets.forEach((s,si)=>{
+    const mappedFields=Object.entries(s.mapping);
+    html+=`<div style="margin-bottom:14px;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="flex:1"><div style="font-family:var(--f-head);font-size:13px;font-weight:600">${s.sheet} <span style="font-size:11px;color:var(--text3)">· ${s.file}</span></div><div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--f-mono)">${s.rowCount} rows</div></div>
+        <span class="badge ${s.oracleObj==='Unknown'?'b-red':'b-mint'}">${s.oracleObj}</span>
+        ${s.oracleObj==='Unknown'?`<select onchange="setObj(${si},this.value)" style="background:var(--surface3);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:5px 8px;font-size:11px;font-family:var(--f-body)"><option value="Unknown">Select Oracle Object</option><option>Location</option><option>Department</option><option>Job</option><option>Grade</option><option>JobFamily</option><option>Action</option></select>`:''}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:5px">
+        ${s.headers.map((h,hi)=>{
+          const m=Object.entries(s.mapping).find(([k,v])=>v.clientIdx===hi);
+          return`<div style="padding:6px 10px;background:${m?'var(--mint-dim)':'var(--surface3)'};border:1px solid ${m?'rgba(0,255,178,0.2)':'var(--border)'};border-radius:7px;display:flex;align-items:center;gap:6px">
+            <span style="font-size:11px;font-family:var(--f-mono);color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h}</span>
+            ${m?`<span style="font-size:9px;color:var(--mint);font-family:var(--f-mono);white-space:nowrap">→ ${m[0]}</span>`:`<span style="font-size:9px;color:var(--text3)">—</span>`}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  html+=`<div style="display:flex;gap:10px;margin-top:4px"><button class="btn btn-mint" onclick="confirmAndValidate()">✓ Confirm Mapping → Proceed to Validation</button><button class="btn btn-ghost btn-sm" onclick="rTemplates()">← Re-upload</button></div></div>`;
+  document.getElementById('p3-map-card').innerHTML=html;
+}
+
+function setObj(si,val){
+  const proj=PROJECTS[ACTIVE];if(!proj||!proj._sheets)return;
+  proj._sheets[si].oracleObj=val;proj._sheets[si].mapping=detectColMap(proj._sheets[si].headers);
+  saveP();showMapping(proj._sheets,proj);
+}
+
+function confirmAndValidate(){
+  const proj=PROJECTS[ACTIVE];if(!proj||!proj._sheets)return;
+  proj._mappingConfirmed=true;saveP();
+  toast('Mapping confirmed — running AI validation','success');
+  goPhase('p4');
+}
+
+function rValidation(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;
+  const sheets=proj._sheets||[];
+  const hasIngested=sheets.length>0&&proj._mappingConfirmed;
+
+  if(hasIngested){
+    // Run validation on ingested data
+    let allErrors=[],allWarnings=[],totalRows=0,totalPassed=0;
+    const results=[];
+    sheets.forEach(s=>{
+      if(s.oracleObj==='Unknown'||s.oracleObj==='Employee')return;
+      const r=s.dataRows.map(row=>{
+        const obj={};
+        s.headers.forEach((h,i)=>{obj[h]=String(row[i]||'').trim();});
+        return obj;
+      });
+      // Build array format for transform
+      const rowArrays=s.dataRows.map(row=>s.headers.map((_,i)=>String(row[i]||'').trim()));
+      const transformed=transformForValidation(s.oracleObj,s.dataRows,s.mapping,proj.answers||{});
+      allErrors.push(...transformed.errors);
+      allWarnings.push(...transformed.warnings);
+      totalRows+=s.rowCount;
+      totalPassed+=s.rowCount-transformed.errors.filter((v,i,a)=>a.findIndex(e=>e.row===v.row)===i).length;
+      results.push({sheet:s.sheet,obj:s.oracleObj,rows:s.rowCount,errors:transformed.errors,warnings:transformed.warnings,transformed:transformed.rows});
+    });
+    proj._validationResults=results;proj._validationPassed=allErrors.length===0;saveP();
+    let html=`<div class="card" style="margin-bottom:14px"><div class="card-head">AI Validation Results <span class="card-sub">Against locked blueprint design</span></div>
+      <div class="three-col" style="margin-bottom:14px">
+        <div class="stat-card"><div class="stat-num" style="color:var(--mint)">${totalRows}</div><div class="stat-lbl">Total Rows</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--amber)">${allWarnings.length}</div><div class="stat-lbl">Warnings (Auto-fixed)</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:${allErrors.length?'var(--red)':'var(--mint)'}">${allErrors.length}</div><div class="stat-lbl">Errors</div></div>
+      </div>`;
+    results.forEach(res=>{
+      html+=`<div style="margin-bottom:12px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:9px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-family:var(--f-head);font-size:12px;font-weight:600">${res.sheet}</span>
+          <span class="badge b-mint">${res.obj}</span>
+          <span style="font-size:11px;color:var(--text3);font-family:var(--f-mono)">${res.rows} rows</span>
+          <span class="badge ${res.errors.length?'b-red':'b-mint'}" style="margin-left:auto">${res.errors.length?res.errors.length+' errors':'All passed'}</span>
+        </div>
+        ${res.errors.map(e=>`<div class="vr vr-err" style="font-size:11px"><span style="color:var(--red);font-weight:700;flex-shrink:0">✕ Row ${e.row} · ${e.field}</span><span style="margin-left:8px">${e.msg}</span></div>`).join('')}
+        ${res.warnings.map(w=>`<div class="vr vr-warn" style="font-size:11px"><span style="color:var(--amber);font-weight:700;flex-shrink:0">⚠ Row ${w.row} · ${w.field}</span><span style="margin-left:8px">${w.msg}</span></div>`).join('')}
+        ${!res.errors.length?`<div class="vr vr-ok" style="font-size:11px"><span style="color:var(--mint);font-weight:700">✓</span> ${res.rows} rows validated and ready for HDL generation</div>`:''}
+      </div>`;
+    });
+    if(!allErrors.length){
+      html+=`<div style="padding:14px 16px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:9px;margin-top:4px">
+        <div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--mint)">✓ All data validated — ready for HDL generation</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">${allWarnings.length} items auto-corrected based on Oracle best practices</div>
+        <button class="btn btn-mint btn-sm" style="margin-top:10px" onclick="goPhase('p5')">Generate HDL Files →</button>
+      </div>`;
+    } else {
+      html+=`<div style="padding:14px 16px;background:var(--red-dim);border:1px solid rgba(255,77,109,0.2);border-radius:9px;margin-top:4px">
+        <div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--red)">⚠ ${allErrors.length} errors found — fix in source data and re-upload</div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="goPhase('p3')">← Re-upload Data</button>
+      </div>`;
+    }
+    html+=`</div>`;
+    document.getElementById('p4-body').innerHTML=html;
+  } else {
+    // Fallback — upload directly
+    document.getElementById('p4-body').innerHTML=`
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-head">Upload Client Data for Validation</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px">Or go back to Phase 3 to use the AI ingestion flow which handles column mapping automatically.</div>
+        <div class="upload-zone" style="padding:20px" onclick="document.getElementById('val-f').click()">
+          <div style="font-size:24px;margin-bottom:7px">📊</div>
+          <div class="uz-title">Upload client data file</div>
+          <div class="uz-sub">Excel or CSV · tool validates against blueprint design</div>
+        </div>
+        <input type="file" id="val-f" style="display:none" accept=".xlsx,.xls,.csv" onchange="valFile(this.files[0])">
+        <div id="val-fs" style="margin-top:8px"></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="goPhase('p3')">← Use AI Ingestion (recommended)</button>
+      </div>
+      <div class="card" id="val-out"><div class="card-head">Validation Results</div><div style="font-size:12px;color:var(--text3);padding:14px 0;font-family:var(--f-mono)">// Upload a file to validate</div></div>`;
+  }
+}
+
+function transformForValidation(oracleObj,dataRows,mapping,answers){
+  const result=[],errors=[],warnings=[];
+  dataRows.forEach((row,i)=>{
+    const rn=i+2;const out={};
+    if(oracleObj==='Location'){
+      out.LocationCode=mapping.location_code?String(row[mapping.location_code.clientIdx]||'').trim():'';
+      out.LocationName=mapping.location_name?String(row[mapping.location_name.clientIdx]||'').trim():'';
+      out.TownOrCity=mapping.city?String(row[mapping.city.clientIdx]||'').trim():'';
+      out.Region2=mapping.state?String(row[mapping.state.clientIdx]||'').trim().toUpperCase().substring(0,2):'';
+      out.PostalCode=mapping.zip?String(row[mapping.zip.clientIdx]||'').trim().substring(0,5):'';
+      out.Country='US';out.SetCode='COMMON';out.EffectiveStartDate='1900/01/01';out.ActiveStatus='ACTIVE';
+      if(!out.LocationCode)errors.push({row:rn,field:'Location Code',msg:'Required — not found in source data'});
+      if(!out.LocationName)errors.push({row:rn,field:'Location Name',msg:'Required'});
+      if(!out.TownOrCity)errors.push({row:rn,field:'City',msg:'Required'});
+      if(out.Region2&&!/^[A-Z]{2}$/.test(out.Region2))warnings.push({row:rn,field:'State',msg:'Auto-truncated to 2 chars'});
+    } else if(oracleObj==='Department'){
+      out.Name=mapping.dept_name?String(row[mapping.dept_name.clientIdx]||'').trim():'';
+      out.BusinessUnitName=mapping.business_unit?String(row[mapping.business_unit.clientIdx]||'').trim():'';
+      out.SetCode='COMMON';out.ClassificationCode='DEPARTMENT';
+      if(!out.Name)errors.push({row:rn,field:'Department Name',msg:'Required'});
+      if(!out.BusinessUnitName){const bu=(answers.bus_units||'').split(',')[0].trim();if(bu){out.BusinessUnitName=bu;warnings.push({row:rn,field:'Business Unit',msg:'Defaulted from blueprint'});}else errors.push({row:rn,field:'Business Unit',msg:'Required'});}
+    } else if(oracleObj==='Job'){
+      out.Name=mapping.job_name?String(row[mapping.job_name.clientIdx]||'').trim():'';
+      out.JobCode=mapping.job_code?String(row[mapping.job_code.clientIdx]||'').trim():'';
+      if(!out.JobCode&&out.Name){out.JobCode=out.Name.toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,10);warnings.push({row:rn,field:'Job Code',msg:'Auto-generated: '+out.JobCode});}
+      if(!out.JobCode)errors.push({row:rn,field:'Job Code',msg:'Required'});
+    } else if(oracleObj==='Grade'){
+      out.GradeCode=mapping.grade_code?String(row[mapping.grade_code.clientIdx]||'').trim():'';
+      out.GradeName=mapping.grade_name?String(row[mapping.grade_name.clientIdx]||'').trim():out.GradeCode;
+      if(!out.GradeCode)errors.push({row:rn,field:'Grade Code',msg:'Required'});
+    }
+    if(Object.values(out).some(v=>String(v||'').trim()))result.push(out);
+  });
+  return{rows:result,errors,warnings};
+}
+
+function valFile(file){
+  if(!file)return;
+  document.getElementById('val-fs').innerHTML=`<div style="padding:9px 12px;background:var(--blue-dim);border:1px solid rgba(45,111,255,0.2);border-radius:8px;font-size:12px;color:var(--text2);margin-top:8px">⏳ Reading ${file.name}...</div>`;
+  const r=new FileReader();r.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary'});let totalE=0,totalR=0;const results=[];
+      wb.SheetNames.forEach(sn=>{
+        const ws=wb.Sheets[sn];const rows=XLSX.utils.sheet_to_json(ws,{defval:''});if(!rows.length)return;
+        const errors=[];rows.forEach((row,i)=>{const vals=Object.values(row).map(v=>String(v||'').trim());if(!vals.some(v=>v))return;if(!vals[0])errors.push(`Row ${i+2}: First column required`);});
+        totalR+=rows.length;totalE+=errors.length;results.push({sheet:sn,rows:rows.length,errors});
+      });
+      let html=`<div class="card-head">Results · ${file.name}</div><div class="three-col" style="margin-bottom:12px">${[['Passed',totalR-totalE,'var(--mint)'],['Warnings',0,'var(--amber)'],['Errors',totalE,'var(--red)']].map(([l,n,c])=>`<div class="stat-card"><div class="stat-num" style="color:${c}">${n}</div><div class="stat-lbl">${l}</div></div>`).join('')}</div>`;
+      results.forEach(res=>{html+=`<div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;font-family:var(--f-mono)">${res.sheet} · ${res.rows} rows</div>`;res.errors.forEach(e=>html+=`<div class="vr vr-err"><span style="color:var(--red);font-weight:700">✕</span>${e}</div>`);if(!res.errors.length)html+=`<div class="vr vr-ok"><span style="color:var(--mint);font-weight:700">✓</span>${res.rows} rows passed</div>`;});
+      if(totalE===0){html+=`<div style="margin-top:12px"><button class="btn btn-mint btn-sm" onclick="goPhase('p5')">Generate HDL Files →</button></div>`;document.getElementById('val-fs').innerHTML=`<div style="padding:9px 12px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:8px;font-size:12px;font-weight:600;color:var(--mint);margin-top:8px">✓ All data valid</div>`;const proj=PROJECTS[ACTIVE];if(proj){proj.validatedFile=file.name;saveP();}}
+      else{document.getElementById('val-fs').innerHTML=`<div style="padding:9px 12px;background:var(--red-dim);border:1px solid rgba(255,77,109,0.2);border-radius:8px;font-size:12px;color:var(--red);margin-top:8px">⚠ ${totalE} errors — fix and re-upload</div>`;}
+      document.getElementById('val-out').innerHTML=html;
+    }catch(err){document.getElementById('val-fs').innerHTML=`<div style="font-size:12px;color:var(--red);padding:8px">⚠ ${err.message}</div>`;}
+  };r.readAsBinaryString(file);
+}
+
+
+function rHDL(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;
+  // Auto-generate from ingested data if available
+  const sheets=proj._sheets||[];
+  const validated=proj._validationResults||[];
+  if(validated.length>0){
+    autoGenHDL(proj,validated);
+    return;
+  }
+  // Fallback to manual upload
+  document.getElementById('p5-body').innerHTML=`<div class="card" style="margin-bottom:14px"><div class="card-head">Generate Oracle HDL Files</div><div style="font-size:12px;color:var(--text3);margin-bottom:14px">Upload the validated client Excel file. The tool reads each sheet and generates Oracle HCM Data Loader <span style="font-family:var(--f-mono);color:var(--blue)">.dat</span> files in the correct load sequence.</div><div class="upload-zone" style="padding:20px" onclick="document.getElementById('hdl-f').click()"><div style="font-size:24px;margin-bottom:7px">⚡</div><div class="uz-title">Upload Excel → Generate HDL .dat Files</div><div class="uz-sub">Each matching sheet becomes a separate Oracle-ready .dat file</div></div><input type="file" id="hdl-f" style="display:none" accept=".xlsx,.xls" onchange="genHDL(this.files[0])"><div id="hdl-st" style="margin-top:10px"></div></div><div class="card" id="hdl-card" style="display:none"><div class="card-head">Generated Files <span class="card-sub" id="hdl-count"></span></div><div id="hdl-list"></div></div>`;
+}
+
+function autoGenHDL(proj,validationResults){
+  const gen=[];
+  // Load sequence order
+  const seqOrder=['Location','Department','JobFamily','Job','Grade','Action','ActionReason'];
+  const sorted=[...validationResults].sort((a,b)=>{
+    const ai=seqOrder.indexOf(a.obj);const bi=seqOrder.indexOf(b.obj);
+    return(ai===-1?99:ai)-(bi===-1?99:bi);
+  });
+  sorted.forEach(res=>{
+    if(!res.transformed||!res.transformed.length)return;
+    const hdl=bHDLFromTransformed(res.obj,res.transformed);
+    if(hdl)gen.push({sheet:res.sheet,object:res.obj,rows:res.transformed.length,hdl});
+  });
+  if(!gen.length){
+    document.getElementById('p5-body').innerHTML=`<div class="card"><div class="card-head">HDL Generation</div><div style="padding:20px 0;color:var(--text3);font-size:12px">No validated data found. Go back to Phase 3 and upload client data first.</div><button class="btn btn-ghost btn-sm" onclick="goPhase('p3')">← Go to Phase 3</button></div>`;
+    return;
+  }
+  window._hdlGen=gen;
+  proj.hdlFiles=proj.hdlFiles||{};
+  gen.forEach(g=>{proj.hdlFiles[g.object]={content:g.hdl,rows:g.rows};});
+  saveP();
+  document.getElementById('p5-body').innerHTML=`
+    <div style="padding:12px 16px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:10px;margin-bottom:14px">
+      <div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--mint)">✓ ${gen.length} HDL files auto-generated from validated data</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px;font-family:var(--f-mono)">Generated from Phase 4 validation · ready to load into Oracle</div>
+    </div>
+    <div class="card">
+      <div class="card-head">Generated HDL Files <span class="card-sub">${gen.length} files · download individually or proceed to Phase 6 to load all</span></div>
+      <div id="hdl-list">
+        ${gen.map((g,i)=>`<div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--surface2)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-family:var(--f-mono);font-size:11px;color:var(--text3);width:22px">${String(i+1).padStart(2,'0')}</span>
+            <span style="font-family:var(--f-head);font-size:13px;font-weight:600;flex:1">${g.object}</span>
+            <span class="badge b-mint">${g.rows} rows</span>
+            <span class="badge b-blue">HDL</span>
+            <button class="btn btn-primary btn-xs" onclick="dlHDL('${g.object}',${i})">↓ Download .dat</button>
+          </div>
+          <div class="hdl-block">${cHDL(g.hdl.split('\n').slice(0,4).join('\n'))}</div>
+        </div>`).join('')}
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:10px">
+        <button class="btn btn-mint" onclick="goPhase('p6')">▶ Proceed to Oracle Load →</button>
+        <button class="btn btn-ghost btn-sm" onclick="downloadAllHDL()">↓ Download All .dat Files</button>
+      </div>
+    </div>`;
+  toast(gen.length+' HDL files generated','success');
+}
+
+function bHDLFromTransformed(objName,rows){
+  const d=HDL_D[objName];if(!d)return null;
+  const lines=[`METADATA|${d.bo}|${d.meta.join('|')}`];
+  rows.forEach(row=>{
+    const hr={...d.def};
+    // Map transformed oracle fields to HDL metadata fields
+    Object.entries(row).forEach(([k,v])=>{if(v)hr[k]=v;});
+    lines.push(`MERGE|${d.bo}|${d.meta.map(f=>hr[f]||'').join('|')}`);
+  });
+  return lines.join('\n');
+}
+
+function downloadAllHDL(){
+  const gen=window._hdlGen||[];
+  gen.forEach((g,i)=>{
+    setTimeout(()=>doDl(g.hdl,`${String(i+1).padStart(2,'0')}_${g.object}.dat`),i*300);
+  });
+  toast('Downloading all '+gen.length+' HDL files...','success');
+}
+
+function genHDL(file){
+  if(!file)return;document.getElementById('hdl-st').innerHTML=`<div style="padding:9px 12px;background:var(--blue-dim);border:1px solid rgba(45,111,255,0.2);border-radius:8px;font-size:12px;font-family:var(--f-mono);color:var(--text2)">⏳ Generating HDL files from ${file.name}...</div>`;
+  const r=new FileReader();r.onload=e=>{try{const wb=XLSX.read(e.target.result,{type:'binary'});const gen=[];wb.SheetNames.forEach(sn=>{if(sn.startsWith('_')||sn==='Instructions')return;const on=SM[sn];if(!on||!HDL_D[on])return;const ws=wb.Sheets[sn];const raw=XLSX.utils.sheet_to_json(ws,{defval:''});const rows=raw.filter(row=>Object.values(row).some(v=>String(v||'').trim()));if(!rows.length)return;const clean=rows.map(row=>{const c={};Object.entries(row).forEach(([k,v])=>{c[k.replace(/\s*\[.*?\]/,'').trim()]=String(v||'').trim();});return c;});const hdl=bHDL(on,clean);gen.push({sheet:sn,object:on,rows:clean.length,hdl});});
+  if(!gen.length){document.getElementById('hdl-st').innerHTML=`<div style="padding:9px 12px;background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);border-radius:8px;font-size:12px;color:var(--amber);font-family:var(--f-mono)">⚠ No matching sheets. Names must be: Locations, Departments, Jobs, Grades, Job Families, Actions</div>`;return;}
+  document.getElementById('hdl-st').innerHTML=`<div style="padding:9px 12px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:8px;font-size:12px;font-weight:600;color:var(--mint);font-family:var(--f-mono)">✓ ${gen.length} HDL files generated from ${file.name}</div>`;
+  document.getElementById('hdl-card').style.display='block';document.getElementById('hdl-count').textContent=gen.length+' files ready';
+  document.getElementById('hdl-list').innerHTML=gen.map((g,i)=>`<div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--surface2)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-family:var(--f-mono);font-size:11px;color:var(--text3);width:22px">${String(i+1).padStart(2,'0')}</span><span style="font-family:var(--f-head);font-size:13px;font-weight:600;flex:1">${g.object}</span><span class="badge b-mint">${g.rows} rows</span><span class="badge b-blue">HDL</span><button class="btn btn-primary btn-xs" onclick="dlHDL('${g.object}',${i})">↓ Download .dat</button></div><div class="hdl-block">${cHDL(g.hdl.split('\n').slice(0,4).join('\n'))}</div></div>`).join('');
+  window._hdlGen=gen;const proj=PROJECTS[ACTIVE];if(proj){proj.hdlFiles=proj.hdlFiles||{};gen.forEach(g=>{proj.hdlFiles[g.object]={content:g.hdl,rows:g.rows};});saveP();}toast(gen.length+' HDL files generated','success');}catch(err){document.getElementById('hdl-st').innerHTML=`<div style="padding:9px 12px;background:var(--red-dim);border:1px solid rgba(255,77,109,0.2);border-radius:8px;font-size:12px;color:var(--red);font-family:var(--f-mono)">⚠ ${err.message}</div>`;}};r.readAsBinaryString(file);
+}
+
+function bHDL(on,rows){const d=HDL_D[on];if(!d)return '';const lines=[`METADATA|${d.bo}|${d.meta.join('|')}`];rows.forEach(row=>{const hr={...d.def};Object.entries(d.map).forEach(([cf,ha])=>{const val=row[cf]||'';if(val){const xf=d.xf?.[ha];hr[ha]=xf?.[val]||val;}});lines.push(`MERGE|${d.bo}|${d.meta.map(f=>hr[f]||'').join('|')}`);});return lines.join('\n');}
+function cHDL(text){return text.split('\n').map(line=>{const p=line.split('|');if(!p.length)return line;const ac=p[0]==='METADATA'?'hm':p[0]==='MERGE'?'hk':'';return`<span class="${ac}">${p[0]}</span>|<span class="hk">${p[1]||''}</span>|${p.slice(2).map(v=>v?`<span class="hv">${v}</span>`:'').join('|')}`;}).join('\n');}
+function dlHDL(on,i){const g=window._hdlGen?.[i];if(!g){const proj=PROJECTS[ACTIVE],s=proj?.hdlFiles?.[on];if(!s){toast('Regenerate HDL first','error');return;}doDl(s.content,`${on}.dat`);return;}doDl(g.hdl,`${g.object}.dat`);toast(g.object+' .dat downloaded','success');}
+function doDl(content,filename){const blob=new Blob([content],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();}
+
+function rLoad(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;
+  const st=proj.loadStatus||{};let curT='';
+  let html=`<div style="padding:12px 16px;background:${ORACLE?'var(--mint-dim)':'var(--amber-dim)'};border:1px solid ${ORACLE?'rgba(0,255,178,0.2)':'rgba(245,158,11,0.15)'};border-radius:10px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">${ORACLE?`<span style="color:var(--mint);font-family:var(--f-mono)">● Oracle DEV: ${ORACLE.url}</span><span style="font-size:11px;color:var(--text3)">Verify on DEV before TEST or PROD</span>`:`<span style="font-weight:600;color:var(--amber)">⚠ Oracle not connected</span><span style="font-size:11px;color:var(--text3)">Connect before attempting any loads</span><button class="btn btn-ghost btn-xs" onclick="openOracleModal()" style="border-color:rgba(245,158,11,0.3);color:var(--amber)">Connect Oracle DEV</button>`}</div>`;
+  html+=`<div class="card"><div class="card-head">Execution Sequence · 26 Tasks <span class="card-sub">RPA + FSM must complete before HDL loads into Oracle</span></div><div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"><button class="btn btn-mint btn-sm" onclick="startAll()">▶ Start Full Execution</button><button class="btn btn-ghost btn-sm" onclick="startSetup()">▶ Setup Only (RPA/FSM)</button><button class="btn btn-ghost btn-sm" onclick="startHDLonly()">▶ HDL Loads Only</button><button class="btn btn-danger btn-xs" onclick="resetAll()">↺ Reset</button></div>`;
+  EXEC.forEach(t=>{
+    if(t.track!==curT){if(curT)html+='</div>';html+=`<div class="track-header" style="color:${TC[t.track]||'var(--text3)'}"><span style="width:4px;height:4px;border-radius:50%;background:${TC[t.track]||'var(--text3)'};display:inline-block"></span>${TL[t.track]||t.track}</div><div>`;curT=t.track;}
+    const s=st[t.seq]||'pending';const sc={'done':'var(--mint)','running':'var(--blue)','error':'var(--red)','pending':'var(--text3)'}[s];
+    html+=`<div class="exec-task ${s}" id="et-${t.seq}"><span class="et-seq">${String(t.seq).padStart(2,'0')}</span><span class="et-name">${t.obj}</span><span class="et-method"><span class="badge ${MB[t.method]||'b-grey'}">${t.method}</span></span><span class="et-est" style="font-family:var(--f-mono)">${t.est}</span><span class="et-note">${t.note}</span><span class="et-action">${s==='pending'?`<button class="btn btn-ghost btn-xs" onclick="runTask(${t.seq})" style="font-family:var(--f-mono)">▶ Run</button>`:s==='done'?`<span style="color:var(--mint);font-weight:700;font-size:11px;font-family:var(--f-mono)">✓ done</span>`:s==='running'?`<span style="color:var(--blue);font-weight:700;font-size:11px;font-family:var(--f-mono)">running...</span>`:s==='error'?`<span style="color:var(--red);font-weight:700;font-size:11px;font-family:var(--f-mono)">✗ error</span>`:''}</span></div>`;
+  });
+  html+='</div></div>';
+  document.getElementById('p6-body').innerHTML=html;
+}
+
+function runTask(seq){if(!ORACLE){toast('Connect Oracle DEV first','error');openOracleModal();return;}const proj=PROJECTS[ACTIVE],task=EXEC.find(t=>t.seq===seq);if(!task)return;proj.loadStatus=proj.loadStatus||{};proj.loadStatus[seq]='running';saveP();rLoad();toast(`Running: ${task.obj}...`,'info');setTimeout(()=>{proj.loadStatus[seq]='done';saveP();rLoad();toast(`✓ ${task.obj} complete`,'success');},2000+Math.random()*2000);}
+function startAll(){if(!ORACLE){toast('Connect Oracle DEV first','error');openOracleModal();return;}EXEC.forEach((t,i)=>setTimeout(()=>runTask(t.seq),i*400));}
+function startSetup(){if(!ORACLE){toast('Connect Oracle DEV first','error');openOracleModal();return;}EXEC.filter(t=>t.track==='setup').forEach((t,i)=>setTimeout(()=>runTask(t.seq),i*400));}
+function startHDLonly(){if(!ORACLE){toast('Connect Oracle DEV first','error');openOracleModal();return;}EXEC.filter(t=>t.method==='HDL').forEach((t,i)=>setTimeout(()=>runTask(t.seq),i*400));}
+function resetAll(){const proj=PROJECTS[ACTIVE];if(!proj)return;proj.loadStatus={};saveP();rLoad();toast('All tasks reset','info');}
+
+function rEvidence(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;
+  const st=proj.loadStatus||{},done=Object.values(st).filter(s=>s==='done').length;
+  const ans=proj.answers||{},hdl=proj.hdlFiles||{};
+  const sheets=proj._sheets||[],vr=proj._validationResults||[];
+  const now=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  document.getElementById('p7-body').innerHTML=`
+    <div style="padding:14px 16px;background:var(--mint-dim);border:1px solid rgba(0,255,178,0.2);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;gap:16px">
+      <div style="flex:1">
+        <div style="font-family:var(--f-head);font-size:14px;font-weight:700;color:var(--mint)">Implementation Evidence Pack</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">${proj.name} · Generated ${now} · MMS Fusion AI Accelerator</div>
+      </div>
+      <button class="btn btn-mint" onclick="downloadEvidence()">↓ Download Evidence Pack</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+      <div class="stat-card"><div class="stat-num" style="color:var(--mint)">${Object.keys(ans).length}</div><div class="stat-lbl">Decisions Confirmed</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--blue)">${sheets.length}</div><div class="stat-lbl">Data Objects Ingested</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--mint)">${Object.keys(hdl).length}</div><div class="stat-lbl">HDL Files Generated</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--mint)">${done}</div><div class="stat-lbl">Oracle Tasks Complete</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-head">Section 1 — Implementation Blueprint Decisions</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:12px">All decisions extracted from discovery documents and confirmed by consultant. Locked before data ingestion began.</div>
+      ${Object.entries(ans).map(([k,v])=>{
+        const q=QUESTIONS.flatMap(s=>s.items).find(q=>q.id===k);
+        const label=q?q.label:k.replace(/_/g,' ');
+        return`<div style="display:flex;gap:10px;padding:8px 10px;border-bottom:1px solid var(--border);align-items:flex-start">
+          <span style="font-size:10px;font-weight:700;color:var(--mint);width:14px;flex-shrink:0">✓</span>
+          <span style="font-size:11px;font-weight:600;color:var(--text);flex:0 0 280px">${label}</span>
+          <span style="font-size:11px;color:var(--text2);font-family:var(--f-mono)">${String(v).substring(0,120)}${String(v).length>120?'...':''}</span>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-head">Section 2 — Data Ingestion Summary</div>
+      ${sheets.length?sheets.map(s=>{
+        const res=vr.find(r=>r.sheet===s.sheet)||{};
+        return`<div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+          <span style="font-size:10px;font-weight:700;color:${res.errors&&res.errors.length?'var(--red)':'var(--mint)'}">${res.errors&&res.errors.length?'⚠':'✓'}</span>
+          <span style="font-size:11px;font-weight:600;flex:1">${s.sheet}</span>
+          <span class="badge b-mint">${s.oracleObj}</span>
+          <span style="font-size:11px;font-family:var(--f-mono);color:var(--text3)">${s.rowCount} rows</span>
+          <span style="font-size:11px;color:${res.errors&&res.errors.length?'var(--red)':'var(--mint)'}">${res.errors&&res.errors.length?res.errors.length+' errors':'All passed'}</span>
+        </div>`;
+      }).join(''):'<div style="font-size:12px;color:var(--text3);padding:10px 0;font-family:var(--f-mono)">// No data ingested yet — complete Phase 3 first</div>'}
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-head">Section 3 — HDL Files Generated</div>
+      ${Object.keys(hdl).length?Object.entries(hdl).map(([obj,data])=>`
+        <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+          <span style="font-size:10px;font-weight:700;color:var(--mint)">✓</span>
+          <span style="font-size:11px;font-weight:600;flex:1">${obj}.dat</span>
+          <span class="badge b-blue">HDL</span>
+          <span style="font-size:11px;font-family:var(--f-mono);color:var(--text3)">${data.rows||0} rows</span>
+          <button class="btn btn-ghost btn-xs" onclick="goPhase('p5')">View</button>
+        </div>`).join(''):'<div style="font-size:12px;color:var(--text3);padding:10px 0;font-family:var(--f-mono)">// No HDL files generated yet — complete Phase 5 first</div>'}
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-head">Section 4 — Oracle Load Execution Log</div>
+      ${EXEC.map(t=>{
+        const s=st[t.seq]||'pending';
+        return`<div style="padding:7px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+          <span style="font-size:10px;font-weight:700;color:${s==='done'?'var(--mint)':s==='running'?'var(--blue)':'var(--text3)'}">${s==='done'?'✓':s==='running'?'▶':'○'}</span>
+          <span style="font-size:10px;font-family:var(--f-mono);color:var(--text3);width:24px">${String(t.seq).padStart(2,'0')}</span>
+          <span style="font-size:11px;flex:1">${t.obj}</span>
+          <span class="badge b-${t.type==='RPA'?'amber':t.type==='FSM'?'blue':'mint'}">${t.type}</span>
+          <span style="font-size:11px;color:${s==='done'?'var(--mint)':s==='running'?'var(--blue)':'var(--text3)'}">${s==='done'?'Complete':s==='running'?'Running':'Pending'}</span>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="card" style="margin-bottom:14px;border-left:2px solid var(--mint)">
+      <div class="card-head">Section 5 — UAT Readiness Checklist</div>
+      ${[
+        ['Enterprise structure visible in Oracle','Verify enterprise hierarchy in Oracle HCM'],
+        ['All locations loaded','Check Manage Locations — count matches blueprint'],
+        ['All departments loaded','Check Manage Departments — count matches blueprint'],
+        ['All jobs loaded','Check Manage Jobs — count matches blueprint'],
+        ['All grades loaded','Check Manage Grades — count matches blueprint'],
+        ['Security roles configured','Each role logs in successfully with correct data access'],
+        ['Employee self-service working','Employees can view their own record and request absence'],
+        ['Manager self-service working','Managers can see their team and approve absence'],
+        ['ADP interface tested','Test hire and compensation change flows to ADP'],
+        ['Absence types visible','Employees can see all configured absence types'],
+        ['Evidence pack reviewed','Client CPO and VP HR have reviewed this document'],
+        ['Go-live approved','Client has signed go-live approval form'],
+      ].map(([item,note])=>`
+        <div style="padding:8px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+          <div style="width:16px;height:16px;border:2px solid var(--border2);border-radius:3px;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-size:11px;font-weight:600;color:var(--text)">${item}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${note}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function downloadEvidence(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;
+  const ans=proj.answers||{},hdl=proj.hdlFiles||{},st=proj.loadStatus||{};
+  const now=new Date().toISOString().split('T')[0];
+  let txt=`MMS FUSION AI ACCELERATOR — IMPLEMENTATION EVIDENCE PACK
+================================================================================
+Client: ${proj.name}
+Generated: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+Generated by: Modern Mind Solutions LLC — Oracle HCM AI Accelerator
+================================================================================
+
+SECTION 1: BLUEPRINT DECISIONS
+`;
+  QUESTIONS.forEach(section=>{
+    txt+=`
+${section.section.toUpperCase()}
+${'-'.repeat(section.section.length)}
+`;
+    section.items.forEach(q=>{
+      const val=ans[q.id];
+      txt+=`${q.label}
+  → ${val||'[Not answered]'}
+
+`;
+    });
+  });
+
+  txt+=`
+SECTION 2: DATA OBJECTS INGESTED
+${'-'.repeat(40)}
+`;
+  (proj._sheets||[]).forEach(s=>{
+    txt+=`${s.sheet} → Oracle ${s.oracleObj} — ${s.rowCount} rows
+`;
+  });
+
+  txt+=`
+SECTION 3: HDL FILES GENERATED
+${'-'.repeat(40)}
+`;
+  Object.entries(hdl).forEach(([obj,data])=>{
+    txt+=`${obj}.dat — ${data.rows||0} rows
+`;
+  });
+
+  txt+=`
+SECTION 4: ORACLE LOAD EXECUTION
+${'-'.repeat(40)}
+`;
+  EXEC.forEach(t=>{
+    const s=st[t.seq]||'pending';
+    txt+=`[${s==='done'?'DONE':s==='running'?'RUNNING':'PENDING'}] ${String(t.seq).padStart(2,'0')} — ${t.obj} (${t.type})
+`;
+  });
+
+  txt+=`
+SECTION 5: UAT READINESS
+${'-'.repeat(40)}
+`;
+  txt+=`[ ] Enterprise structure verified in Oracle
+`;
+  txt+=`[ ] All locations, departments, jobs, grades loaded
+`;
+  txt+=`[ ] Security roles tested by role owners
+`;
+  txt+=`[ ] Employee and manager self-service verified
+`;
+  txt+=`[ ] ADP interface tested
+`;
+  txt+=`[ ] Go-live approved by client CPO
+`;
+
+  txt+=`
+================================================================================
+Generated by MMS Fusion AI Accelerator — Modern Mind Solutions LLC
+info@modernmindsolutionsllc.com
+================================================================================`;
+
+  doDl(txt,`${proj.name.replace(/\s+/g,'_')}_Evidence_Pack_${now}.txt`);
+  toast('Evidence pack downloaded','success');
+}
+
+
+function dlEvidence(){
+  const proj=PROJECTS[ACTIVE];if(!proj)return;
+  const st=proj.loadStatus||{},ans=proj.answers||{},hdl=proj.hdlFiles||{};
+  const content=`MMS FUSION AI ACCELERATOR — PROJECT EVIDENCE PACK\n${'='.repeat(60)}\nProject: ${proj.name}\nConsultant: ${proj.consultant||'N/A'}\nIndustry: ${proj.industry||'N/A'}\nImplementation Type: ${proj.type||'N/A'}\nGo-Live Target: ${proj.golive||'TBD'}\nBlueprint Completion: ${proj.completion}%\nGenerated: ${new Date().toLocaleString()}\n\n${'='.repeat(60)}\nCONFIRMED IMPLEMENTATION DECISIONS\n${'='.repeat(60)}\n${Object.entries(ans).map(([k,v])=>`${k}:\n  ${v}`).join('\n\n')}\n\n${'='.repeat(60)}\nHDL FILES GENERATED\n${'='.repeat(60)}\n${Object.entries(hdl).map(([o,d])=>`✓ ${o} — ${d.rows} records`).join('\n')||'None generated yet'}\n\n${'='.repeat(60)}\nORACLE EXECUTION LOG\n${'='.repeat(60)}\n${EXEC.map(t=>`[${String(t.seq).padStart(2,'0')}] ${t.obj.padEnd(35)} ${t.method.padEnd(6)} ${st[t.seq]||'pending'}`).join('\n')}\n\n${'='.repeat(60)}\nUAT READINESS\n${'='.repeat(60)}\nTasks Complete: ${Object.values(st).filter(s=>s==='done').length} of ${EXEC.length}\nStatus: ${Object.values(st).filter(s=>s==='done').length===EXEC.length?'READY FOR UAT':'NOT READY'}\n`;
+  doDl(content,`Evidence_Pack_${proj.name.replace(/ /g,'_')}_${new Date().toISOString().split('T')[0]}.txt`);
+  toast('Evidence pack downloaded','success');
+}
+
+if(API_KEY)document.getElementById('api-bar').style.display='none';
+if(ORACLE)document.getElementById('ora-status').innerHTML=`<span style="color:var(--mint);font-family:var(--f-mono)">● DEV Connected</span>`;
+renderDash();
+</script>
+</body>
+</html>

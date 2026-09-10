@@ -301,7 +301,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     <div class="modal-sub">Your key is saved in your browser only — never sent anywhere except Anthropic</div>
     <div class="form-group">
       <label class="form-label">Claude API Key</label>
-      <input class="form-input" id="apikey-modal-inp" type="password" placeholder="sk-ant-api03-..." onkeydown="if(event.key==='Enter')saveApiKeyModal()" style="font-family:var(--f-mono)">
+      <input class="form-input" id="apikey-modal-inp" type="password" placeholder="sk-ant-..." onkeydown="if(event.key==='Enter')saveApiKeyModal()" style="font-family:var(--f-mono)">
     </div>
     <div style="font-size:11px;color:var(--text3);margin-bottom:16px">Get a free key at <strong style="color:var(--blue)">console.anthropic.com</strong> → API Keys → Create key</div>
     <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:14px;border-top:1px solid var(--border)">
@@ -445,8 +445,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     <div class="prog-wrap"><div class="prog-lbl">Blueprint</div><div class="prog-track"><div class="prog-fill" id="cb-fill" style="width:0%"></div></div><div class="prog-pct" id="cb-pct" style="color:var(--text3)">0%</div><div class="prog-tag pt-blocked" id="cb-tag">Upload to begin</div></div>
     <div class="api-bar" id="api-bar">
       <span style="font-size:18px">🔑</span>
-      <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--amber)">Claude API key required for AI extraction</div><div style="font-size:11px;color:var(--text3);margin-top:1px">Used only in your browser · get one free at console.anthropic.com</div></div>
-      <input class="api-inp" id="api-inp" type="password" placeholder="sk-ant-api03-...">
+      <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--amber)">AI Extraction Ready — Powered by MMS Fusion Backend</div><div style="font-size:11px;color:var(--text3);margin-top:1px">Optional — tool uses secure backend by default. Enter your key for direct access.</div></div>
+      <input class="api-inp" id="api-inp" type="password" placeholder="sk-ant-...">
       <button class="btn btn-ghost btn-sm" onclick="saveApiKey()" style="border-color:rgba(245,158,11,0.3);color:var(--amber)">Save Key</button>
     </div>
     <div class="two-col" style="margin-bottom:14px">
@@ -923,7 +923,28 @@ async function runExtraction(){
     : combined;
   // Both passes get full doc when it fits
 
+  const BACKEND = 'https://mms-fusion-backend-6k5t.onrender.com';
+
+  // Secure extraction - API key never exposed to browser
+  const secureExtract = async (passNum, docText) => {
+    const r = await fetch(`${BACKEND}/api/extract/pass${passNum}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({documents: docText, pass_number: passNum})
+    });
+    if (!r.ok) {
+      const e = await r.json().catch(()=>({}));
+      if(r.status === 503) throw new Error(e.detail || 'AI extraction is temporarily paused. Contact info@modernmindsolutionsllc.com');
+      if(r.status === 429) throw new Error('Too many requests. Please wait a moment and try again.');
+      throw new Error(e.detail || 'Backend error ' + r.status);
+    }
+    const d = await r.json();
+    return d.extracted || {};
+  };
+
+  // Fallback: direct Claude call if user has their own API key
   const callClaude = async (prompt) => {
+    if (!API_KEY) throw new Error('No API key — using backend extraction');
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
@@ -1032,13 +1053,36 @@ Return ONLY valid JSON with string values (never arrays or nested objects):
   document.getElementById('extr-out').innerHTML=`<div style="text-align:center;padding:24px 0"><div class="spinner" style="margin-bottom:14px"></div><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--text)">AI Extraction — Pass 1 of 2</div><div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--f-mono);line-height:2">Reading enterprise structure · Legal entities · Business units<br>Jobs · Grades · Payroll · Positions · Worker types</div></div>`;
 
   try {
-    const raw1 = await callClaude(prompt1);
-    const result1 = parseJSON(raw1);
+    // Use backend secure extraction (API key hidden from browser)
+    // Falls back to direct if backend unavailable
+    let result1 = {};
+    try {
+      result1 = await secureExtract(1, combined);
+    } catch(backendErr) {
+      // Fallback to direct Claude call if user has API key
+      if(API_KEY) {
+        const raw1 = await callClaude(prompt1);
+        result1 = parseJSON(raw1);
+      } else {
+        // Check if it's the kill switch
+      if(backendErr.message && backendErr.message.includes('paused')) {
+        throw new Error('AI extraction is temporarily paused. Please contact info@modernmindsolutionsllc.com');
+      }
+      throw new Error('Backend unavailable and no API key set. Please enter your Claude API key or try again.');
+      }
+    }
 
     document.getElementById('extr-out').innerHTML=`<div style="text-align:center;padding:24px 0"><div class="spinner" style="margin-bottom:14px"></div><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--mint)">Pass 1 Complete · ${Object.keys(result1).length} fields · Running Pass 2...</div><div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--f-mono)">Extracting: Absence · Benefits · Security · DFFs · Integrations</div></div>`;
 
-    const raw2 = await callClaude(prompt2);
-    const result2 = parseJSON(raw2);
+    let result2 = {};
+    try {
+      result2 = await secureExtract(2, combined);
+    } catch(backendErr) {
+      if(API_KEY) {
+        const raw2 = await callClaude(prompt2);
+        result2 = parseJSON(raw2);
+      }
+    }
     extracted = {...result1, ...result2};
 
     // Pass 3 — targeted extraction for security roles, DFFs, integrations
@@ -1056,8 +1100,15 @@ DOCUMENTS:
 
 Return ONLY: {"security":"...","dff":"...","integrations":"..."}`;
 
-    const raw3 = await callClaude(prompt3);
-    const result3 = parseJSON(raw3);
+    let result3 = {};
+    try {
+      result3 = await secureExtract(3, combined);
+    } catch(backendErr) {
+      if(API_KEY) {
+        const raw3 = await callClaude(prompt3);
+        result3 = parseJSON(raw3);
+      }
+    }
     if(result3.security && result3.security.length > (extracted.security||'').length) extracted.security = result3.security;
     if(result3.dff && result3.dff.length > (extracted.dff||'').length) extracted.dff = result3.dff;
     if(result3.integrations && result3.integrations.length > (extracted.integrations||'').length) extracted.integrations = result3.integrations;

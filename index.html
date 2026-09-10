@@ -516,48 +516,48 @@ const DEMO_ANSWERS = {
   "currency": "USD",
   "go_live_date": "January 5, 2027",
   "impl_type": "New Implementation \u2014 migrating from ADP Workforce Now",
-  "legal_entity": "Nexus Regional Medical Center LLC EIN 47-3344521, Nexus Community Health LLC EIN 47-5567892, Nexus Physician Partners LLC EIN 47-8891234, Nexus Specialty Services LLC EIN TBD",
-  "legal_employer": "Nexus Regional Medical Center LLC, Nexus Community Health LLC, Nexus Physician Partners LLC, Nexus Specialty Services LLC",
-  "psu": "Nexus Regional Medical Center LLC, Nexus Community Health LLC, Nexus Physician Partners LLC, Nexus Specialty Services LLC",
+  "legal_entity": "Nexus Regional Medical Center LLC (EIN 47-3344521), Nexus Community Health LLC (EIN 47-5567892), Nexus Physician Partners LLC (EIN 47-8891234), Nexus Specialty Services LLC (EIN TBD - future Q4 2026 acquisition)",
+  "legal_employer": "Nexus Regional Medical Center LLC, Nexus Community Health LLC, Nexus Physician Partners LLC, Nexus Specialty Services LLC (future)",
+  "psu": "Nexus Regional Medical Center LLC, Nexus Community Health LLC, Nexus Physician Partners LLC, Nexus Specialty Services LLC (future)",
   "ldg": "Nexus US Legislative Data Group",
-  "bus_units": "Nexus Hospital Operations BU, Nexus Community Health BU, Nexus Physician Services BU, Nexus Corporate Services BU, Nexus Specialty Services BU",
-  "locations_count": "17 locations across 2 states (Massachusetts and Connecticut)",
-  "departments_count": "94 departments",
-  "job_structure": "380 rationalized job titles across 7 job families: Clinical Direct Care, Clinical Support Services, Physicians and Advanced Practice, Administrative, Information Technology, Finance and Accounting, Facilities and Support Services; FLSA status mapped per job",
-  "grade_structure": "18 grades total: 14 standard grades (G01-G14) ranging from Entry Level Non-Clinical to C-Suite, plus 4 physician grades (PHY-1 through PHY-4); grade-to-job mapping rules enforced",
-  "grade_rates": "Yes \u2014 min/midpoint/max salary ranges for grades G01-G14; placeholder ranges for PHY-1 through PHY-4 (no published ranges as physician comp is individually negotiated)",
-  "positions": "Full position management enabled; position synchronization enabled so position drives job, grade, and location on assignment; required for Joint Commission headcount tracking and Massachusetts nurse staffing ratio reporting",
-  "positions_count": "Approximately 2,200 budgeted positions (approximately 1,800 in hospital and clinical areas, remainder in corporate and clinic)",
-  "worker_types": "Employees (full-time and part-time), Contingent Workers (agency nurses and locum physicians \u2014 approximately 165 active)",
-  "multiple_assignments": "Yes \u2014 enabled; nurses can hold primary assignment in one department and secondary assignment in another (e.g., float pool)",
-  "payroll_in_scope": "No \u2014 Oracle Payroll excluded from Phase 1; remaining on ADP Workforce Now for at least 18 months post go-live",
-  "payroll_freq": "Biweekly, 26 pay periods, payday every other Friday",
-  "salary_basis": "Annual Salary annualization factor 1 for exempt staff, Hourly annualization factor 2080 for nonexempt staff, Per Diem Hourly annualization factor 2080 for per diem clinical staff",
+  "bus_units": "Nexus Hospital Operations BU (NHP-HOSP), Nexus Community Health BU (NHP-COMM), Nexus Physician Services BU (NHP-PHY), Nexus Corporate Services BU (NHP-CORP), Nexus Specialty Services BU (NHP-SPEC - placeholder for acquisition)",
+  "locations_count": "17 locations across Massachusetts and Connecticut",
+  "departments_count": "94 departments across all business units",
+  "job_structure": "380 rationalized jobs across 7 job families: Clinical Direct Care (CLIN-DC), Clinical Support Services (CLIN-SUP), Physicians and Advanced Practice (PHY-ADV), Administrative (ADMIN), Information Technology (IT), Finance and Accounting (FIN), Facilities and Support Services (FAC)",
+  "grade_structure": "18 grades total: Standard Grades G01-G14 (entry level through C-Suite), Physician Grades PHY-1 through PHY-4 (Resident/Fellow through Department Chief)",
+  "grade_rates": "Salary ranges defined for G01-G14 (min/midpoint/max): G01 $30k-$38k-$46k, G02 $36k-$46k-$56k, G03 $45k-$58k-$71k, G04 $55k-$71k-$87k, G05 $65k-$85k-$105k, G06 $75k-$98k-$121k, G07 $85k-$112k-$139k, G08 $80k-$100k-$120k, G09 $90k-$115k-$140k, G10 $105k-$135k-$165k, G11 $120k-$155k-$190k, G12 $140k-$180k-$220k, G13 $165k-$215k-$265k, G14 $200k-$275k-$350k; PHY-1 through PHY-4 no published ranges (individually negotiated)",
+  "positions": "Yes - Full Position Management enabled; position synchronization enabled (position drives job, grade, location); approximately 2200 budgeted positions",
+  "positions_count": "Approximately 2,200 budgeted positions",
+  "worker_types": "Employees (full-time, part-time, per diem), Contingent Workers (agency nurses, locum physicians)",
+  "multiple_assignments": "Yes - enabled for nurses floating between departments (e.g. primary ICU assignment with secondary Medical Surgical assignment)",
+  "payroll_in_scope": "No - Oracle Payroll excluded from Phase 1, retained on ADP Workforce Now; Oracle Payroll planned for Phase 2",
+  "payroll_freq": "Biweekly \u2014 26 pay periods per year, payday every other Friday",
+  "salary_basis": "Annual Salary (annualization factor 1) for exempt staff, Hourly (annualization factor 2080) for nonexempt staff, Per Diem Hourly (annualization factor 2080) for per diem clinical staff",
   "elements": "Regular Salary, Regular Hourly, Per Diem Hourly, Overtime (1.5x), Overtime Holiday (2.0x), Night Shift Differential (15%), Weekend Differential (10%), Charge Nurse Premium ($3.00/hr flat), On-Call Pay (flat rate per hour), Callback Pay (2.0x), Holiday Pay, Annual Bonus, Clinical Certification Bonus, Retention Bonus",
-  "payroll_int": "ADP Workforce Now payroll interface \u2014 Oracle to ADP, near-real-time target 4-hour SLA, triggered by hire/termination/compensation change/job change, via HCM Extract and SFTP",
-  "employee_count": "3,847 active employees (2,156 Nexus Regional Medical Center, 891 Nexus Community Health, 412 Nexus Physician Partners, 388 Corporate Services) plus approximately 165 active contingent workers",
-  "legacy_system": "ADP Workforce Now (primary); VerifyMD credentialing database (license data); paper personnel files for pre-2009 employees",
-  "absence_in_scope": "Yes",
+  "payroll_int": "ADP Workforce Now payroll interface (Oracle to ADP, near-real-time 4-hour SLA, HCM Extract plus SFTP, triggers: hire/terminate/compensation change/job change), Azure Active Directory user provisioning (Oracle to Azure AD, SCIM connector, triggers: hire creates account/terminate disables within 2 hours), Sterling background check (Oracle to Sterling, REST API, trigger: new hire record created)",
+  "employee_count": "3847 active employees (2156 Nexus Regional Medical Center, 891 Nexus Community Health, 412 Nexus Physician Partners, 388 Corporate Services) plus 165 active contingent workers plus 120 Harbor Spine and Orthopedics employees (pending acquisition)",
+  "legacy_system": "ADP Workforce Now (primary - employee master, jobs, compensation, absence balances), VerifyMD (credentialing database - physician and nursing license data), Personnel files (pre-2009 legacy employees - paper records being scanned)",
+  "absence_in_scope": "Yes \u2014 Phase 1",
   "absence_types": "PTO (Paid Time Off), Sick Leave (Massachusetts Earned Sick Time), FMLA (Federal Family Medical Leave Act), Massachusetts PFML (Paid Family Medical Leave), Parental Leave, Military Leave (USERRA), Bereavement Leave, Jury Duty",
-  "accrual_plans": "PTO: Full-time Years 1-3 earn 80 hrs/yr, Years 4-9 earn 120 hrs/yr, Year 10+ earn 160 hrs/yr; Part-time prorated by FTE; Per diem no PTO. Sick Leave: Full-time 56 hours/calendar year front-loaded Jan 1; Part-time prorated by FTE; Per diem 1 hour per 30 hours worked per Massachusetts Earned Sick Time law",
-  "benefits_in_scope": "Yes",
-  "benefit_plans": "Medical (HDHP, PPO, HMO), Dental (Basic, Enhanced), Vision, Basic Life (1x salary employer paid), Voluntary Life (up to 5x), Long Term Disability (employer paid), FSA (general purpose with PPO/HMO; limited purpose with HDHP), HSA (with HDHP only), 403b (Fidelity, 3% employer match up to 6% employee contribution), Tuition Reimbursement ($5,000/year requires manager approval)",
+  "accrual_plans": "PTO Full-Time: 80 hrs/yr Years 1-3, 120 hrs/yr Years 4-9, 160 hrs/yr Year 10+; PTO Part-Time: prorated by FTE; PTO Per Diem: no accrual; Sick Leave Full-Time: 56 hours/calendar year front-loaded January 1; Sick Leave Part-Time: prorated by FTE; Sick Leave Per Diem: 1 hour per 30 hours worked",
+  "benefits_in_scope": "Yes \u2014 Phase 1",
+  "benefit_plans": "Medical HDHP, Medical PPO, Medical HMO, Dental Basic, Dental Enhanced, Vision, Basic Life (1x salary employer paid), Voluntary Life (up to 5x salary), Long Term Disability (employer paid), FSA General Purpose (PPO/HMO), FSA Limited Purpose (HDHP), HSA (HDHP only), 403b (Fidelity, 3% employer match up to 6% employee contribution), Tuition Reimbursement ($5000/year requires manager approval)",
   "open_enrollment": "October annually, effective November 1",
-  "security": "NHP HR Administrator (all 4 BUs, all HR transactions, compensation visible, 3 users), NHP HR Specialist (single BU only, all HR transactions, no compensation except new hire processing, 8 users), NHP Payroll Liaison (all BUs, read only, compensation visible, no transactions, 2 users), NHP Benefits Administrator (benefits module full access, no comp outside benefits context, 1 user), NHP Nurse Manager (own department only, absence approval, schedule view, assignment read, no compensation, clinical-specific pages, ~85 users), NHP Line Manager (direct reports only, absence approval, assignment read, no compensation, ~200 users), NHP Employee Self Service (own record only - personal info, absence request, payslip view, all ~3,847 employees)",
-  "sso": "SSO required via Azure Active Directory (Microsoft Entra ID); tenant domain nexushealthpartners.com; Oracle to federate with Azure AD tenant",
-  "dff": "Assignment DFF Segment 1: Legacy ADP Employee ID (Character length 9, required for all, numeric only free text), Assignment DFF Segment 2: Union Code (Lookup, required for Hospital Operations and Community Health BUs, values: SEIU-1199/MNA/TEAMSTERS-122/NON-UNION), Assignment DFF Segment 3: Clinical License Type (Lookup, required for clinical staff, values: RN/LPN/NP/PA/MD/DO/PT/OT/SLP/RAD-TECH/LAB-TECH/RT/PHARM-D/NONE), Assignment DFF Segment 4: License Expiration Date (Date, required for clinical staff where License Type is not NONE), Person DFF Segment 1: State License Number (Character length 25, optional)",
+  "sso": "Yes, Azure Active Directory (Microsoft Entra ID), tenant domain nexushealthpartners.com, federation with Oracle HCM",
   "value_sets": "Union Code lookup (SEIU-1199, MNA, TEAMSTERS-122, NON-UNION), Clinical License Type lookup (RN, LPN, NP, PA, MD, DO, PT, OT, SLP, RAD-TECH, LAB-TECH, RT, PHARM-D, NONE), Legacy ADP Employee ID free text numeric only length 9",
-  "page_customizations": "Personal Details page - hide SSN field for all roles except NHP HR Administrator and NHP Payroll Liaison; Employment Info page - add License Type and License Expiration Date visible for all roles when job family is CLIN-DC, CLIN-SUP, or PHY-ADV; My Team page - add custom section Care Team Assignment showing primary care team employee is assigned to",
-  "hr_actions": "CLIN-SUSPEND Clinical Suspension (action type CHANGE_ASSIGNMENT), LIC-REVOKE License Revocation (action type TERMINATION if license revoked and employee cannot work or CHANGE_ASSIGNMENT if reassigned to non-clinical role), PRN-CHANGE PRN Status Change (action type CHANGE_ASSIGNMENT), CRED-RENEW Credentialing Renewal (action type CHANGE_ASSIGNMENT)",
-  "action_reasons": "Clinical Suspension reasons: Active Investigation, Administrative; License Revocation: implied by action; PRN Status Change reasons: Full-Time to PRN, PRN to Full-Time, PRN to Part-Time; Credentialing Renewal reasons: Initial License, License Renewed, License Extended",
-  "conversion_scope": "All 3,847 active employees full data, 165 active contingent workers basic data, 3 years transaction history for active employees, full employment history from hire date for current assignment, current salary plus 3 years salary history, current PTO balance as of cutover date, current Sick Leave balance as of cutover date, 120 Harbor Spine and Orthopedics employees for day-one go-live loading",
-  "salary_conversion": "Yes - current salary for all employees with effective date of current salary, plus 3 years of salary history",
-  "absence_balances": "Yes - current PTO balance and current Sick Leave balance as of cutover date must be converted",
-  "integrations": "ADP Workforce Now Payroll Interface (Oracle to ADP, trigger: hire/terminate/compensation change/job change, near-real-time 4-hour SLA, HCM Extract plus SFTP), Azure Active Directory User Provisioning (Oracle to Azure AD, trigger: hire creates account/terminate disables within 2 hours, Oracle Identity Governance or SCIM connector), Sterling Background Check (Oracle to Sterling, trigger: new hire record created, Sterling REST API)",
-  "modules_enabled": "Core HR, Oracle Absence Management, Oracle Benefits",
-  "costing": "GL structure is a seven-segment flexfield: Entity, Division, Department, Cost Center, Account, Project, Intercompany. Cost Center segment required on every department record. 94 departments each map one-to-one with a GL cost center. Assignment-level costing to be designed. Oracle Payroll not in scope Phase 1 - payroll processed in ADP Workforce Now.",
-  "valid_grades": "Yes \u2014 clinical jobs restricted to specific grade ranges. Physicians PHY grades only.",
-  "position_synchronization": "Yes \u2014 position drives job, grade, and location on assignment automatically"
+  "page_customizations": "Personal Details page: hide SSN field for all roles except NHP HR Administrator and NHP Payroll Liaison; Employment Info page: add License Type and License Expiration Date visible when job family is CLIN-DC, CLIN-SUP, or PHY-ADV; My Team page: add custom section Care Team Assignment showing primary care team employee is assigned to",
+  "action_reasons": "CLIN-SUSPEND reasons: Active Investigation, Administrative; LIC-REVOKE reasons: license revoked by state board; PRN-CHANGE reasons: Full-Time to PRN, PRN to Full-Time, PRN to Part-Time; CRED-RENEW reasons: Initial License, License Renewed, License Extended",
+  "conversion_scope": "3847 active employees full data, 165 active contingent workers basic data, 3 years transaction history for active employees, full employment history from hire date for current assignment, Harbor Spine and Orthopedics 120 employees for day-one go-live, pre-2009 legacy personnel file records being scanned, license data from VerifyMD credentialing database",
+  "salary_conversion": "Current salary for all employees with effective date of current salary, 3 years of salary history per employee, salary basis: Annual Salary (exempt), Hourly annualization factor 2080 (nonexempt), Per Diem Hourly annualization factor 2080 (per diem clinical)",
+  "absence_balances": "Current PTO balance as of cutover date, current Sick Leave balance as of cutover date, both required for all eligible employees",
+  "modules_enabled": "Core HR, Absence Management, Benefits, HCM Design Studio, Descriptive Flexfields; Excluded from Phase 1: Oracle Payroll, Oracle Recruiting, VerifyMD integration, Cornerstone OnDemand integration",
+  "costing": "GL structure is 7-segment flexfield: Entity, Division, Department, Cost Center, Account, Project, Intercompany; Cost Center is required on every department record; 94 departments each map one-to-one to a GL cost center; assignment-level costing to be designed; Oracle Payroll not in scope for Phase 1",
+  "security": "NHP HR Administrator (all 4 BUs, all HR transactions, compensation visible), NHP HR Specialist (single BU only, all HR transactions, no compensation except new hire), NHP Payroll Liaison (all BUs, read only, compensation visible), NHP Benefits Administrator (benefits module full access, no comp outside benefits context), NHP Nurse Manager (own department only, absence approval, schedule view, assignment read, no compensation, clinical pages), NHP Line Manager (direct reports only, absence approval, assignment read, no compensation), NHP Employee Self Service (own record only, personal info, absence request, payslip view)",
+  "dff": "Legacy ADP Employee ID (character length 9, required, numeric free text), Union Code (lookup, required for Hospital Operations and Community Health BUs, values: SEIU-1199/MNA/TEAMSTERS-122/NON-UNION), Clinical License Type (lookup, required for clinical staff, values: RN/LPN/NP/PA/MD/DO/PT/OT/SLP/RAD-TECH/LAB-TECH/RT/PHARM-D/NONE), License Expiration Date (date, required for clinical staff), State License Number (character length 25, optional, person DFF)",
+  "integrations": "ADP Workforce Now (outbound Oracle to ADP, triggered by hire/termination/compensation change/job change, near-real-time 4-hour SLA via HCM Extract and SFTP), Azure Active Directory (outbound Oracle to Azure AD, triggered by hire to create account and termination to disable within 2 hours, via SCIM connector), Sterling (outbound Oracle to Sterling, triggered by new hire record created, via Sterling REST API)",
+  "hr_actions": "Clinical Suspension, License Revocation, PRN Status Change, Credentialing Renewal",
+  "valid_grades": "Yes \u2014 clinical jobs G03-G07, physicians PHY grades only, management G11-G14",
+  "position_synchronization": "Yes \u2014 position drives job, grade, and location on assignment"
 };
 
 function loadDemoProject(){
@@ -600,9 +600,10 @@ function loadDemoProject(){
     S.set('projects', PROJECTS);
   }
   ACTIVE = demoId;
-  S.set('active', demoId);
+  // Do NOT save demo to localStorage - keep it session-only
+  // so the tool always opens clean for new visitors
   go('project');
-  toast('Demo loaded — Nexus Health Partners','success');
+  toast('Demo loaded — Nexus Health Partners · Healthcare · 3,847 employees','success');
 }
 // ── END DEMO MODE ──────────────────────────────────────────────────────────
 const saveP=()=>S.set('projects',PROJECTS);
@@ -1038,8 +1039,28 @@ Return ONLY valid JSON with string values (never arrays or nested objects):
 
     const raw2 = await callClaude(prompt2);
     const result2 = parseJSON(raw2);
-
     extracted = {...result1, ...result2};
+
+    // Pass 3 — targeted extraction for security roles, DFFs, integrations
+    // These appear late in documents and need a dedicated focused pass
+    document.getElementById('extr-out').innerHTML=`<div style="text-align:center;padding:24px 0"><div class="spinner" style="margin-bottom:14px"></div><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--mint)">Pass 2 Complete · ${Object.keys(result2).length} fields · Running Pass 3...</div><div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--f-mono)">Final pass: Security roles · DFF segments · Integrations</div></div>`;
+
+    const prompt3 = `You are a senior Oracle HCM Cloud Core HR consultant. Extract ONLY these 3 fields from the documents. Return ONLY valid JSON with string values, never arrays.
+
+- security: ALL custom security roles as comma-separated string "Role Name (access scope), Role Name (access scope)". Look for Security Roles, HR Administrator, HR Specialist, Nurse Manager sections.
+- dff: ALL Descriptive Flexfield segments as comma-separated string "Field Name (type, values)". Look for DFF, Descriptive Flexfield, Assignment DFF, Person DFF sections.
+- integrations: ALL day-1 integrations as comma-separated string "System (direction, trigger)". Look for Integrations, ADP interface, Azure AD, Sterling sections.
+
+DOCUMENTS:
+\${combined}
+
+Return ONLY: {"security":"...","dff":"...","integrations":"..."}`;
+
+    const raw3 = await callClaude(prompt3);
+    const result3 = parseJSON(raw3);
+    if(result3.security && result3.security.length > (extracted.security||'').length) extracted.security = result3.security;
+    if(result3.dff && result3.dff.length > (extracted.dff||'').length) extracted.dff = result3.dff;
+    if(result3.integrations && result3.integrations.length > (extracted.integrations||'').length) extracted.integrations = result3.integrations;
 
       let found=0;Object.entries(extracted).forEach(([k,v])=>{
       let val;
@@ -1972,6 +1993,16 @@ function dlEvidence(){
   const content=`MMS FUSION AI ACCELERATOR — PROJECT EVIDENCE PACK\n${'='.repeat(60)}\nProject: ${proj.name}\nConsultant: ${proj.consultant||'N/A'}\nIndustry: ${proj.industry||'N/A'}\nImplementation Type: ${proj.type||'N/A'}\nGo-Live Target: ${proj.golive||'TBD'}\nBlueprint Completion: ${proj.completion}%\nGenerated: ${new Date().toLocaleString()}\n\n${'='.repeat(60)}\nCONFIRMED IMPLEMENTATION DECISIONS\n${'='.repeat(60)}\n${Object.entries(ans).map(([k,v])=>`${k}:\n  ${v}`).join('\n\n')}\n\n${'='.repeat(60)}\nHDL FILES GENERATED\n${'='.repeat(60)}\n${Object.entries(hdl).map(([o,d])=>`✓ ${o} — ${d.rows} records`).join('\n')||'None generated yet'}\n\n${'='.repeat(60)}\nORACLE EXECUTION LOG\n${'='.repeat(60)}\n${EXEC.map(t=>`[${String(t.seq).padStart(2,'0')}] ${t.obj.padEnd(35)} ${t.method.padEnd(6)} ${st[t.seq]||'pending'}`).join('\n')}\n\n${'='.repeat(60)}\nUAT READINESS\n${'='.repeat(60)}\nTasks Complete: ${Object.values(st).filter(s=>s==='done').length} of ${EXEC.length}\nStatus: ${Object.values(st).filter(s=>s==='done').length===EXEC.length?'READY FOR UAT':'NOT READY'}\n`;
   doDl(content,`Evidence_Pack_${proj.name.replace(/ /g,'_')}_${new Date().toISOString().split('T')[0]}.txt`);
   toast('Evidence pack downloaded','success');
+}
+
+// On startup, clear demo project from localStorage so tool opens clean
+// Demo only loads when user explicitly clicks Load Demo button
+delete PROJECTS['demo-nexus-2026'];
+S.set('projects', PROJECTS);
+// Also clear active if it was pointing to demo
+if(S.get('active') === 'demo-nexus-2026') {
+  localStorage.removeItem('mmsf2_active');
+  ACTIVE = null;
 }
 
 if(API_KEY)document.getElementById('api-bar').style.display='none';

@@ -1026,35 +1026,6 @@ Return ONLY valid JSON with string values (never arrays or nested objects):
 {"absence_in_scope":"...","absence_types":"..."}`;
 
     let extracted = {};
-  const parseJSON = (raw) => {
-    const m = raw.match(/\{[\s\S]*/);
-    if (!m) return {};
-    let js = m[0];
-    try { return JSON.parse(js); }
-    catch(e1) {
-      const lc = js.lastIndexOf(',');
-      const lb = js.lastIndexOf('}');
-      if (lc > lb) js = js.substring(0, lc) + '}';
-      else if (!js.endsWith('}')) js += '}';
-      try { return JSON.parse(js); }
-      catch(e2) {
-        const result = {};
-        [...raw.matchAll(/"([a-z_]+)"\s*:\s*"([^"]{0,800})"/g)].forEach(p => { result[p[1]] = p[2]; });
-        return result;
-      }
-    }
-  };
-
-  const callClaude = async (prompt) => {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:4000, messages:[{role:'user',content:prompt}]})
-    });
-    if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error?.message||'API error '+r.status); }
-    const d = await r.json();
-    return parseJSON(d.content[0].text);
-  };
 
   // Run pass 1 - enterprise, legal, BUs, payroll
   document.getElementById('extr-out').innerHTML=`<div style="text-align:center;padding:24px 0"><div class="spinner" style="margin-bottom:14px"></div><div style="font-family:var(--f-head);font-size:13px;font-weight:600;color:var(--text)">AI Extraction — Pass 1 of 2</div><div style="font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--f-mono);line-height:2">Reading enterprise structure · Legal entities · Business units<br>Jobs · Grades · Payroll · Positions · Worker types</div></div>`;
